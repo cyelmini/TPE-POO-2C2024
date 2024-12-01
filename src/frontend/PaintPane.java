@@ -188,18 +188,20 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
-			if(figure == selectedFigure) {
+			//seteo el color
+			if(figure.equals(selectedFigure)) {
 				gc.setStroke(Color.RED);
 			} else {
 				gc.setStroke(lineColor);
 			}
 			gc.setFill(figureColorMap.get(figure));
+
+			//dibujo
+			DrawFigure drawFig = new DrawFigure(figure, figureColorMap.get(figure), gc);
+
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
-				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
-				gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
+
 			} else if(figure instanceof Circle) {
 				Circle circle = (Circle) figure;
 				double diameter = circle.getRadius() * 2;
