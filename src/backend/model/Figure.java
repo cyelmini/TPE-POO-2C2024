@@ -1,5 +1,7 @@
 package backend.model;
 
-public interface Figure {
+public abstract class Figure {
+
+
 
 }
