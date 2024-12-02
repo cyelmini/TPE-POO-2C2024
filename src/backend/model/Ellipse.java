@@ -11,6 +11,14 @@ public class Ellipse extends Figure {
         this.sMinorAxis = sMinorAxis;
     }
 
+    public double width(){
+        return centerPoint.getX() - (sMayorAxis / 2);
+    }
+
+    public double height(){
+        return centerPoint.getY() - (sMinorAxis / 2);
+    }
+
     @Override
     public String toString() {
         return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);

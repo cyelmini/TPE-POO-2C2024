@@ -2,11 +2,14 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.Draw.Buttons.*;
+import frontend.Draw.DrawFigure;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -53,6 +56,9 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+
+		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
+		// del grupo tools se desactivará automáticamente.
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
@@ -68,38 +74,31 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
+		// Se setean los valores de los botones a usar
+		setButtons();
+
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
 		canvas.setOnMouseReleased(event -> {
+
 			Point endPoint = new Point(event.getX(), event.getY());
+
 			if(startPoint == null) { //imperativo: hay que hacer excepcion
 				return ;
 			}
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) { //idem anterior
 				return ;
 			}
-			Figure newFigure = null;
 
-			//de aca para abajo: imperativo (podes instanciar un draw figure)
-			if(rectangleButton.isSelected()) {
-				newFigure = new Rectangle(startPoint, endPoint);
-			}
-			else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Circle(startPoint, circleRadius);
-			} else if(squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Square(startPoint, size);
-			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-				double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-				double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
-				newFigure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-			} else {
-				return ;
-			}
+			// Se instancia una nueva figura de acuerdo a la seleccionada en el botón
+			DrawFigure newFigure = null;
+
+			Toggle selectedButton = tools.getSelectedToggle();
+			Buttons aux = (Buttons)selectedButton;
+			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), null); //FALTA IMPLEMENTAR LOGICA DEL SOMBREADO
+
 			figureColorMap.put(newFigure, fillColorPicker.getValue());
 			canvasState.addFigure(newFigure);
 			startPoint = null;
@@ -199,14 +198,13 @@ public class PaintPane extends BorderPane {
 			}
 			gc.setFill(figureColorMap.get(figure));
 
-			//dibujo
-			DrawFigure drawFig = new DrawFigure(figure, figureColorMap.get(figure), gc);
-
-
 			//imperativo
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
-
+				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
+				gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
 			} else if(figure instanceof Circle) {
 				Circle circle = (Circle) figure;
 				double diameter = circle.getRadius() * 2;
@@ -249,6 +247,14 @@ public class PaintPane extends BorderPane {
 					(Math.pow(eventPoint.getY() - ellipse.getCenterPoint().getY(), 2) / Math.pow(ellipse.getsMinorAxis(), 2))) <= 0.30;
 		}
 		return found;
+	}
+
+	// Función para inicializar los valores de los botones
+	private void setButtons(){
+		circleButton.setUserData(new CircleButton());
+		ellipseButton.setUserData(new EllipseButton());
+		rectangleButton.setUserData(new RectangleButton());
+		squareButton.setUserData(new SquareButton());
 	}
 
 }

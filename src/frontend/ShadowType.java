@@ -16,11 +16,11 @@ public enum ShadowType {
             return "Simple";
         }
     },
-    COLOUR(10.0){
+    COLOR(10.0){
 
         @Override
         public String toString(){
-            return "Colour";
+            return "Color";
         }
     },
     SIMPLE_INVERSE(-10.0){
@@ -30,11 +30,11 @@ public enum ShadowType {
             return "Simple inverse";
         }
     },
-    COLOUR_INVERSE(-10.0){
+    COLOR_INVERSE(-10.0){
 
         @Override
         public String toString(){
-            return "Colour inverse";
+            return "Color inverse";
         }
     };
 

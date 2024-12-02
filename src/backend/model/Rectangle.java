@@ -17,6 +17,14 @@ public class Rectangle extends Figure {
         return bottomRight;
     }
 
+    public double width(){
+        return Math.abs(topLeft.getX() - bottomRight.getX());
+    }
+
+    public double height(){
+        return Math.abs(topLeft.getY() - bottomRight.getY());
+    }
+
     @Override
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
