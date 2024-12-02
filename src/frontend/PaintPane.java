@@ -8,10 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,7 +35,9 @@ public class PaintPane extends BorderPane {
 	ToggleButton squareButton = new ToggleButton("Cuadrado");
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	
+
+	// Botones para las sombras
+	private ChoiceBox<ShadowType> shadowTypeChoiceBox = new ChoiceBox<>();
 
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
@@ -54,9 +53,6 @@ public class PaintPane extends BorderPane {
 
 	// Lista de DrawFigures
 	List<DrawFigure> drawFigures = new ArrayList<>();
-
-	// Colores de relleno de cada figura
-
 
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -83,6 +79,11 @@ public class PaintPane extends BorderPane {
 		// Se setean los valores de los botones a usar
 		setButtons();
 
+		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
+		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
+		shadowTypeChoiceBox.setPrefWidth(90);
+		buttonsBox.getChildren().add(shadowTypeChoiceBox);
+
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
@@ -107,6 +108,7 @@ public class PaintPane extends BorderPane {
 
 			Buttons button = (Buttons)selectedButton.getUserData();
 			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc);
+			newFigure.setShadowType(shadowTypeChoiceBox.getValue());
 			drawFigures.add(newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;

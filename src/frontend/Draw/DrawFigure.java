@@ -11,8 +11,7 @@ public abstract class DrawFigure {
 
     protected GraphicsContext gc;
     protected Figure figure;
-    private Color color;
-
+    private final Color color;
     private ShadowType shadowType;
 
     public DrawFigure(Color color, GraphicsContext gc){
@@ -48,6 +47,10 @@ public abstract class DrawFigure {
 
     public double getOffset(){
         return shadowType.getOffset();
+    }
+
+    public void setShadowType(ShadowType shadowType){
+        this.shadowType = shadowType;
     }
 
     public String toString(){

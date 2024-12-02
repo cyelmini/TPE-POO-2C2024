@@ -11,9 +11,10 @@ public enum ShadowType {
         public Color getColor(Color color){
             return Color.TRANSPARENT;
         }
+
         @Override
         public String toString(){
-            return "No shadow";
+            return "Sin sombra";
         }
     },
     SIMPLE(10.0){
@@ -21,33 +22,34 @@ public enum ShadowType {
         public Color getColor(Color color){
             return Color.GREY;
         }
+
         @Override
         public String toString(){
             return "Simple";
         }
     },
     COLOR(10.0){
-
         @Override
         public String toString(){
             return "Color";
         }
     },
     SIMPLE_INVERSE(-10.0){
+
         @Override
         public Color getColor(Color color){
             return Color.GREY;
         }
-        @Override
-        public String toString(){
-            return "Simple inverse";
-        }
-    },
-    COLOR_INVERSE(-10.0){
 
         @Override
         public String toString(){
-            return "Color inverse";
+            return "Simple inverso";
+        }
+    },
+    COLOR_INVERSE(-10.0){
+        @Override
+        public String toString(){
+            return "Color inverso";
         }
     };
 
@@ -64,4 +66,5 @@ public enum ShadowType {
     public double getOffset() {
         return offset;
     }
+
 }
