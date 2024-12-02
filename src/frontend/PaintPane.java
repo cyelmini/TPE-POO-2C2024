@@ -59,6 +59,11 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
+		// Inicializar shadowbox
+		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
+		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
+		shadowTypeChoiceBox.setPrefWidth(90);
+
 		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
 		// del grupo tools se desactivará automáticamente.
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
@@ -68,21 +73,20 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+		setFigureButtons();
+
+		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
+		buttonsBox.getChildren().add(new Label("Formato"));
+		buttonsBox.getChildren().add(shadowTypeChoiceBox);
 		buttonsBox.getChildren().add(fillColorPicker);
+		// Formato de la VBox
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		// Se setean los valores de los botones a usar
-		setButtons();
-
-		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
-		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
-		shadowTypeChoiceBox.setPrefWidth(90);
-		buttonsBox.getChildren().add(shadowTypeChoiceBox);
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -194,7 +198,7 @@ public class PaintPane extends BorderPane {
 	}
 
 	// Función para inicializar los valores de los botones
-	private void setButtons(){
+	private void setFigureButtons(){
 		circleButton.setUserData(new CircleButton());
 		ellipseButton.setUserData(new EllipseButton());
 		rectangleButton.setUserData(new RectangleButton());
