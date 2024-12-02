@@ -82,7 +82,6 @@ public class PaintPane extends BorderPane {
 		});
 
 		canvas.setOnMouseReleased(event -> {
-
 			Point endPoint = new Point(event.getX(), event.getY());
 
 			if(startPoint == null) { //imperativo: hay que hacer excepcion
@@ -94,13 +93,11 @@ public class PaintPane extends BorderPane {
 
 			// Se instancia una nueva figura de acuerdo a la seleccionada en el botón
 			DrawFigure newFigure = null;
-
 			Toggle selectedButton = tools.getSelectedToggle();
 			Buttons aux = (Buttons)selectedButton;
-			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc); //FALTA IMPLEMENTAR LOGICA DEL SOMBREADO
-
-			figureColorMap.put(newFigure, fillColorPicker.getValue());
-			canvasState.addFigure(newFigure);
+			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc);
+			figureColorMap.put(newFigure.getFigure(), fillColorPicker.getValue());
+			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
 			redrawCanvas();
 		});

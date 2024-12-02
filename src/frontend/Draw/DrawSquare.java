@@ -13,8 +13,9 @@ public class DrawSquare extends DrawFigure {
 
     public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc) {
         super(color, gc);
-
-
+        double size = Math.abs(topLeft.getX() - bottomRight.getX());
+        figure = new Square(topLeft, size);
+        square = (Square)figure;
     }
 
     @Override

@@ -11,7 +11,8 @@ public class DrawCircle extends DrawFigure {
 
     public DrawCircle(Point centerPoint, double radius, Color color, GraphicsContext gc) {
         super(color, gc);
-
+        figure = new Circle(centerPoint, radius);
+        circle = (Circle) figure;
     }
 
     @Override

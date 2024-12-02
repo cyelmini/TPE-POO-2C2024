@@ -12,6 +12,8 @@ public class DrawRectangle extends DrawFigure {
 
     public DrawRectangle(Point topLeft, Point bottomRight, Color color, GraphicsContext gc){
         super(color, gc);
+        figure = new Rectangle(topLeft, bottomRight);
+        rectangle = (Rectangle)figure;
 
     }
 

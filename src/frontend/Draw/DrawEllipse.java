@@ -11,7 +11,8 @@ public class DrawEllipse extends DrawFigure {
 
     public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color color, GraphicsContext gc) {
         super(color, gc);
-
+        figure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
+        ellipse = (Ellipse) figure;
     }
 
     @Override
