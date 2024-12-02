@@ -10,12 +10,10 @@ public abstract class DrawFigure {
     protected GraphicsContext gc;
     protected Figure figure;
     private Color color;
-    private ShadowType shadowType;
 
-    public DrawFigure(Color color, GraphicsContext gc, ShadowType shadowType){
+    public DrawFigure(Color color, GraphicsContext gc){
         this.color = color;
         this.gc = gc;
-        this.shadowType = shadowType;
     }
 
     public abstract void draw();

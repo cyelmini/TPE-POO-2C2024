@@ -97,7 +97,7 @@ public class PaintPane extends BorderPane {
 
 			Toggle selectedButton = tools.getSelectedToggle();
 			Buttons aux = (Buttons)selectedButton;
-			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), null); //FALTA IMPLEMENTAR LOGICA DEL SOMBREADO
+			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc); //FALTA IMPLEMENTAR LOGICA DEL SOMBREADO
 
 			figureColorMap.put(newFigure, fillColorPicker.getValue());
 			canvasState.addFigure(newFigure);

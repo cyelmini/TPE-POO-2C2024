@@ -1,9 +1,7 @@
 package frontend.Draw;
 
 import backend.model.Circle;
-import backend.model.Figure;
 import backend.model.Point;
-import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -11,8 +9,9 @@ public class DrawCircle extends DrawFigure {
 
     private Circle circle;
 
-    public DrawCircle(Point centerPoint, double radius, Color color, GraphicsContext gc, ShadowType shadowType) {
-        super(color, gc, shadowType);
+    public DrawCircle(Point centerPoint, double radius, Color color, GraphicsContext gc) {
+        super(color, gc);
+
     }
 
     @Override

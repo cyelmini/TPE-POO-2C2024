@@ -11,8 +11,8 @@ public class DrawSquare extends DrawFigure {
 
     private Square square;
 
-    public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc, ShadowType shadowType) {
-        super(color, gc,shadowType);
+    public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc) {
+        super(color, gc);
 
 
     }

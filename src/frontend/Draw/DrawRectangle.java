@@ -1,18 +1,17 @@
 package frontend.Draw;
 
-import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DrawRect extends DrawFigure {
+public class DrawRectangle extends DrawFigure {
 
     private Rectangle rectangle;
 
-    public DrawRect(Point topLeft, Point bottomRight, Color color, GraphicsContext gc, ShadowType shadowType){
-        super(color, gc,shadowType);
+    public DrawRectangle(Point topLeft, Point bottomRight, Color color, GraphicsContext gc){
+        super(color, gc);
 
     }
 
