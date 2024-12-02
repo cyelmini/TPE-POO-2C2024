@@ -87,15 +87,20 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) { //imperativo: hay que hacer excepcion
 				return ;
 			}
+
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) { //idem anterior
 				return ;
 			}
 
-			// Se instancia una nueva figura de acuerdo a la seleccionada en el botón
 			DrawFigure newFigure = null;
 			Toggle selectedButton = tools.getSelectedToggle();
-			Buttons aux = (Buttons)selectedButton;
-			newFigure = aux.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc);
+
+			if(selectedButton == null || selectedButton.getUserData() == null){
+				return; // Ningún botón válido está seleccionado
+			}
+
+			Buttons button = (Buttons)selectedButton.getUserData();
+			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc);
 			figureColorMap.put(newFigure.getFigure(), fillColorPicker.getValue());
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;

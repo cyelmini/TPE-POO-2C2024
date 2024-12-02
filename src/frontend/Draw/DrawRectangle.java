@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 
 public class DrawRectangle extends DrawFigure {
 
-    private Rectangle rectangle;
+    private final Rectangle rectangle;
 
     public DrawRectangle(Point topLeft, Point bottomRight, Color color, GraphicsContext gc){
         super(color, gc);

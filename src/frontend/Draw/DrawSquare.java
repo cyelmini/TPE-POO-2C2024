@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 public class DrawSquare extends DrawFigure {
 
-    private Square square;
+    private final Square square;
 
     public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc) {
         super(color, gc);

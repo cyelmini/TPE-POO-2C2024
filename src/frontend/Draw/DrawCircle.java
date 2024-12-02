@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class DrawCircle extends DrawFigure {
 
-    private Circle circle;
+    private final Circle circle;
 
     public DrawCircle(Point centerPoint, double radius, Color color, GraphicsContext gc) {
         super(color, gc);

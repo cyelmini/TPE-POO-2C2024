@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class DrawEllipse extends DrawFigure {
 
-    private Ellipse ellipse;
+    private final Ellipse ellipse;
 
     public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color color, GraphicsContext gc) {
         super(color, gc);
