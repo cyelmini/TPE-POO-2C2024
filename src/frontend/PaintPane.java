@@ -74,13 +74,15 @@ public class PaintPane extends BorderPane {
 
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null) {
+			if(startPoint == null) { //imperativo: hay que hacer excepcion
 				return ;
 			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) { //idem anterior
 				return ;
 			}
 			Figure newFigure = null;
+
+			//de aca para abajo: imperativo (podes instanciar un draw figure)
 			if(rectangleButton.isSelected()) {
 				newFigure = new Rectangle(startPoint, endPoint);
 			}
@@ -148,6 +150,7 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+				//imperativo: move el drawFigure
 				if(selectedFigure instanceof Rectangle) {
 					Rectangle rectangle = (Rectangle) selectedFigure;
 					rectangle.getTopLeft().x += diffX;
@@ -199,6 +202,8 @@ public class PaintPane extends BorderPane {
 			//dibujo
 			DrawFigure drawFig = new DrawFigure(figure, figureColorMap.get(figure), gc);
 
+
+			//imperativo
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
 
@@ -223,6 +228,8 @@ public class PaintPane extends BorderPane {
 
 	boolean figureBelongs(Figure figure, Point eventPoint) {
 		boolean found = false;
+
+		//imperativo
 		if(figure instanceof Rectangle) {
 			Rectangle rectangle = (Rectangle) figure;
 			found = eventPoint.getX() > rectangle.getTopLeft().getX() && eventPoint.getX() < rectangle.getBottomRight().getX() &&
