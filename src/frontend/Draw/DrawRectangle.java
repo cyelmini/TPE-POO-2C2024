@@ -22,5 +22,11 @@ public class DrawRectangle extends DrawFigure {
                 rectangle.width(), rectangle.height());
         gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 rectangle.width(), rectangle.height());
+
+        Color shadowColor = getShadowColor();
+        if (shadowColor != Color.TRANSPARENT) {
+            gc.setFill(shadowColor);
+            double offset = getOffset();
+            gc.fillRect(rectangle.getTopLeft().getX() + offset, rectangle.getTopLeft().getY() + offset, rectangle.width(), rectangle.height());        }
     }
 }

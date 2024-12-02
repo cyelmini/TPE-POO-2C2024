@@ -19,5 +19,13 @@ public class DrawEllipse extends DrawFigure {
     public void draw() {
         gc.strokeOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
         gc.fillOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
+
+        Color shadowColor = getShadowColor();
+        if (shadowColor != Color.TRANSPARENT) {
+            gc.setFill(shadowColor);
+            double offset = getOffset();
+            gc.fillOval(ellipse.width() + offset, ellipse.height() + offset, ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
+        }
+
     }
 }

@@ -13,6 +13,8 @@ public abstract class DrawFigure {
     protected Figure figure;
     private Color color;
 
+    private ShadowType shadowType;
+
     public DrawFigure(Color color, GraphicsContext gc){
         this.color = color;
         this.gc = gc;
@@ -38,6 +40,14 @@ public abstract class DrawFigure {
 
     public void move(double diffX, double diffY){
         figure.move(diffX, diffY);
+    }
+
+    public Color getShadowColor(){
+        return shadowType.getColor(color);
+    }
+
+    public double getOffset(){
+        return shadowType.getOffset();
     }
 
     public String toString(){
