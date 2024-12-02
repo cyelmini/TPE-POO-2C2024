@@ -11,12 +11,11 @@ public class DrawSquare extends DrawRectangle {
 
     private final Square square;
 
-    public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc) {
-        super(topLeft, bottomRight, color, gc);
+    public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc, ShadowType shadowType) {
+        super(topLeft, bottomRight, color, gc, shadowType);
         double size = Math.abs(topLeft.getX() - bottomRight.getX());
         figure = new Square(topLeft, size);
         square = (Square)figure;
     }
-
 
 }

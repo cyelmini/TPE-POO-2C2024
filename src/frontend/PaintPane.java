@@ -107,8 +107,7 @@ public class PaintPane extends BorderPane {
 			}
 
 			Buttons button = (Buttons)selectedButton.getUserData();
-			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc);
-			newFigure.setShadowType(shadowTypeChoiceBox.getValue());
+			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue());
 			drawFigures.add(newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
