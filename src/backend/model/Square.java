@@ -9,10 +9,16 @@ public class Square extends Rectangle {
         this.size = size;
     }
 
-
     @Override
     public String toString() {
         return String.format("Cuadrado [ %s , %s ]", getTopLeft(), getBottomRight());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Square square &&
+                size == square.size
+                && getTopLeft().equals(square.getTopLeft());
     }
 
 }

@@ -15,7 +15,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,10 +116,10 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
-				if(figureBelongs(figure, eventPoint)) {
+			for(DrawFigure drawFigure : drawFigures) {
+				if(drawFigure.found(eventPoint)) {
 					found = true;
-					label.append(figure.toString());
+					label.append(drawFigure);
 				}
 			}
 			if(found) {
@@ -136,7 +135,11 @@ public class PaintPane extends BorderPane {
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for(DrawFigure drawFigure : drawFigures) {
-					found = drawFigure.found(eventPoint);
+					if(drawFigure.found(eventPoint)) {
+						selectedFigure = drawFigure.getFigure();
+						label.append(drawFigure);
+						found = true;
+					}
 				}
 				if (found) {
 					statusPane.updateStatus(label.toString());
@@ -159,36 +162,13 @@ public class PaintPane extends BorderPane {
 						drawFigure.move(diffX, diffY);
 					}
 				}
-
-//				//imperativo: move el drawFigure
-//				if(selectedFigure instanceof Rectangle) {
-//					Rectangle rectangle = (Rectangle) selectedFigure;
-//					rectangle.getTopLeft().x += diffX;
-//					rectangle.getBottomRight().x += diffX;
-//					rectangle.getTopLeft().y += diffY;
-//					rectangle.getBottomRight().y += diffY;
-//				} else if(selectedFigure instanceof Circle) {
-//					Circle circle = (Circle) selectedFigure;
-//					circle.getCenterPoint().x += diffX;
-//					circle.getCenterPoint().y += diffY;
-//				} else if(selectedFigure instanceof Square) {
-//					Square square = (Square) selectedFigure;
-//					square.getTopLeft().x += diffX;
-//					square.getBottomRight().x += diffX;
-//					square.getTopLeft().y += diffY;
-//					square.getBottomRight().y += diffY;
-//				} else if(selectedFigure instanceof Ellipse) {
-//					Ellipse ellipse = (Ellipse) selectedFigure;
-//					ellipse.getCenterPoint().x += diffX;
-//					ellipse.getCenterPoint().y += diffY;
-//				}
 				redrawCanvas();
 			}
 		});
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				canvasState.deleteFigure(selectedFigure);
+				drawFigures.removeIf(drawFigure -> drawFigure.selected(selectedFigure));
 				selectedFigure = null;
 				redrawCanvas();
 			}
@@ -210,7 +190,6 @@ public class PaintPane extends BorderPane {
 			drawFigure.draw();
 		}
 	}
-
 
 	// Función para inicializar los valores de los botones
 	private void setButtons(){

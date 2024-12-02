@@ -1,7 +1,6 @@
 package backend.model;
 
 public class Point {
-
     public double x, y;
 
     public Point(double x, double y) {
@@ -22,4 +21,15 @@ public class Point {
         return String.format("{%.2f , %.2f}", x, y);
     }
 
+    public void move(double diffX, double diffY){
+        x += diffX;
+        y += diffY;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return o instanceof Point point
+                && x == point.getX()
+                && y == point.getY();
+    }
 }

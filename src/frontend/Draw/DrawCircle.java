@@ -21,4 +21,9 @@ public class DrawCircle extends DrawFigure {
         gc.fillOval(circle.width(), circle.height(), diameter, diameter);
         gc.strokeOval(circle.width(), circle.height(), diameter, diameter);
     }
+
+    @Override
+    public void move(double diffX, double diffY) {
+
+    }
 }

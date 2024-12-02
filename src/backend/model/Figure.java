@@ -2,10 +2,10 @@ package backend.model;
 
 public abstract class Figure {
 
-   /*
-    @Override
-    public boolean equals(Object o){
+    public abstract boolean found(Point eventPoint);
 
-    }
-    */
+    public abstract void move(double diffX, double diffY);
+
+    public abstract boolean equals(Object o);
+
 }

@@ -36,5 +36,12 @@ public abstract class DrawFigure {
         return figure.found(eventPoint);
     }
 
-    public abstract void move(double diffX, double diffY);
+    public void move(double diffX, double diffY){
+        figure.move(diffX, diffY);
+    }
+
+    public String toString(){
+        return figure.toString();
+    }
+
 }

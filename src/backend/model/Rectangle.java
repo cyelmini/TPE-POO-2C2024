@@ -26,6 +26,25 @@ public class Rectangle extends Figure {
     }
 
     @Override
+    public boolean found(Point eventPoint){
+        return eventPoint.getX() > getTopLeft().getX() && eventPoint.getX() < getBottomRight().getX() &&
+                eventPoint.getY() > getTopLeft().getY() && eventPoint.getY() < getBottomRight().getY();
+    }
+
+    @Override
+    public void move(double diffX, double diffY){
+        topLeft.move(diffX, diffY);
+        bottomRight.move(diffX, diffY);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return o instanceof Rectangle rectangle
+                && topLeft.equals(rectangle.getTopLeft())
+                && bottomRight.equals(rectangle.getBottomRight());
+    }
+
+    @Override
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
