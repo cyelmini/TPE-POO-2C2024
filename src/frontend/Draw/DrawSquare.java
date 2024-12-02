@@ -7,12 +7,13 @@ import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class DrawSquare extends DrawRect {
+public class DrawSquare extends DrawFigure {
 
     private Square square;
 
     public DrawSquare(Point topLeft, Point bottomRight, Color color, GraphicsContext gc, ShadowType shadowType) {
-        super(topLeft, bottomRight, color, gc, shadowType);
+        super(color, gc,shadowType);
+
 
     }
 
