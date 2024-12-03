@@ -44,6 +44,11 @@ public class PaintPane extends BorderPane {
 	// Botón copiar formato
 	private ToggleButton copyFormatButton = new ToggleButton("Copiar fmt");
 
+	//Botones Barra Derecha
+	private Button turnRightButton = new Button("Girar D");
+	private Button turnHorizontalButton = new Button("Voltear H");
+	private Button turnVerticalButton = new Button("Voltear V");
+
 	// Selector de color de relleno
 	private ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
@@ -91,21 +96,34 @@ public class PaintPane extends BorderPane {
 		copyFormatButton.setMinWidth(90);
 		copyFormatButton.setCursor(Cursor.HAND);
 
+		//Inicializa botones de la barra derecha
+		turnRightButton.setMinWidth(90);
+		turnHorizontalButton.setMinWidth(90);
+		turnVerticalButton.setMinWidth(90);
+
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(new Label("Formato"));
-		buttonsBox.getChildren().add(shadowTypeChoiceBox);
-		buttonsBox.getChildren().add(beveledCheckBox);
-		buttonsBox.getChildren().add(fillColorPicker);
-		buttonsBox.getChildren().add(gradientColorPicker);
-		buttonsBox.getChildren().add(copyFormatButton);
+		buttonsBox.getChildren().addAll(shadowTypeChoiceBox, beveledCheckBox, fillColorPicker, gradientColorPicker, copyFormatButton);
 
-		// Formato de la VBox
+		// Formato de la VBox izquierda
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
+
+		// Se Ccrea un Vbox para los botones de la barra derecha
+		VBox leftButtonsBox = new VBox(10);
+		leftButtonsBox.getChildren().add(new Label("Acciones:"));
+		leftButtonsBox.getChildren().addAll(turnRightButton, turnHorizontalButton, turnVerticalButton);
+
+		// Formato de la VBox derecha
+		leftButtonsBox.setPadding(new Insets(5));
+		leftButtonsBox.setStyle("-fx-background-color: #999");
+		leftButtonsBox.setPrefWidth(100);
+		gc.setLineWidth(1);
+
 
 
 		canvas.setOnMousePressed(event -> {
@@ -238,7 +256,8 @@ public class PaintPane extends BorderPane {
 
 
 		setLeft(buttonsBox);
-		setRight(canvas);
+		setRight(leftButtonsBox);
+		setCenter(canvas);
 	}
 
 	private void changeSelectedFigureColor() {
