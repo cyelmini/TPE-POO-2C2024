@@ -10,8 +10,8 @@ public class DrawEllipse extends DrawFigure {
 
     private final Ellipse ellipse;
 
-    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color color, GraphicsContext gc, ShadowType shadowType) {
-        super(color, gc, shadowType);
+    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType) {
+        super(primaryColor, secondaryColor, gc, shadowType);
         figure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
         ellipse = (Ellipse) figure;
     }
@@ -26,7 +26,7 @@ public class DrawEllipse extends DrawFigure {
             gc.fillOval(ellipse.width() + offset, ellipse.height() + offset, ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
         }
 
-        gc.setFill(getFillColor());
+        setGradientRad();
         gc.strokeOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
         gc.fillOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
 

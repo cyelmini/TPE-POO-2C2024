@@ -5,7 +5,7 @@ public class Square extends Rectangle {
     private final double size;
 
     public Square(Point topLeft, double size) {
-        super(topLeft, new Point(topLeft.x + size, topLeft.y + size));
+        super(topLeft, new Point(topLeft.getX() + size, topLeft.getY() + size));
         this.size = size;
     }
 
@@ -20,5 +20,4 @@ public class Square extends Rectangle {
                 size == square.size
                 && getTopLeft().equals(square.getTopLeft());
     }
-
 }

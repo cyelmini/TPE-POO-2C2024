@@ -10,8 +10,8 @@ public class DrawCircle extends DrawEllipse {
 
     private final Circle circle;
 
-    public DrawCircle(Point centerPoint, double radius, Color color, GraphicsContext gc, ShadowType shadowType) {
-        super(centerPoint, radius*2, radius*2, color, gc, shadowType);
+    public DrawCircle(Point centerPoint, double radius, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType) {
+        super(centerPoint, radius*2, radius*2, primaryColor, secondaryColor, gc, shadowType);
         figure = new Circle(centerPoint, radius);
         circle = (Circle) figure;
     }

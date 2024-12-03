@@ -27,6 +27,7 @@ public class PaintPane extends BorderPane {
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 	Color lineColor = Color.BLACK;
 	Color defaultFillColor = Color.YELLOW;
+	Color defaultGradientColor = defaultFillColor;
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -41,6 +42,9 @@ public class PaintPane extends BorderPane {
 
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
+
+	//Selector de color de gradiente
+	ColorPicker gradientColorPicker = new ColorPicker(defaultGradientColor);
 
 	// Dibujar una figura
 	Point startPoint;
@@ -81,6 +85,8 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().add(new Label("Formato"));
 		buttonsBox.getChildren().add(shadowTypeChoiceBox);
 		buttonsBox.getChildren().add(fillColorPicker);
+		buttonsBox.getChildren().add(gradientColorPicker);
+
 		// Formato de la VBox
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
@@ -111,7 +117,7 @@ public class PaintPane extends BorderPane {
 			}
 
 			Buttons button = (Buttons)selectedButton.getUserData();
-			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue());
+			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue());
 			drawFigures.add(newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
@@ -143,6 +149,8 @@ public class PaintPane extends BorderPane {
 				for(DrawFigure drawFigure : drawFigures) {
 					if(drawFigure.found(eventPoint)) {
 						selectedFigure = drawFigure.getFigure();
+						fillColorPicker.setValue(drawFigure.getFillColor());
+						gradientColorPicker.setValue(drawFigure.getGradientColor());
 						label.append(drawFigure);
 						found = true;
 					}
@@ -155,6 +163,14 @@ public class PaintPane extends BorderPane {
 				}
 				redrawCanvas();
 			}
+		});
+
+		fillColorPicker.setOnMouseClicked(event -> {
+			changeSelectedFigureColor();
+		});
+
+		gradientColorPicker.setOnMouseClicked(event -> {
+			changeSelectedFigureColor();
 		});
 
 		canvas.setOnMouseDragged(event -> {
@@ -184,11 +200,16 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+	private void changeSelectedFigureColor() {
+
+	}
+
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(DrawFigure drawFigure : drawFigures){
 			if(drawFigure.selected(selectedFigure)) {
 				gc.setStroke(Color.RED);
+				drawFigure.setColors(fillColorPicker.getValue(), gradientColorPicker.getValue());
 			} else {
 				gc.setStroke(lineColor);
 			}
