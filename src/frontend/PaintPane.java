@@ -163,13 +163,18 @@ public class PaintPane extends BorderPane {
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for(DrawFigure drawFigure : drawFigures.values()) {
 					if(drawFigure.found(eventPoint)) {
-						selectedFigure = drawFigure.getFigure();
-						fillColorPicker.setValue(drawFigure.getFillColor());
-						gradientColorPicker.setValue(drawFigure.getGradientColor());
-						shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
-						beveledCheckBox.setSelected(drawFigure.isBeveled());
-						label.append(drawFigure);
-						found = true;
+						if(selectedFigure != null && copyFormatButton.isSelected()){
+							drawFigure.format(drawFigures.get(selectedFigure));
+							copyFormatButton.setSelected(false);
+						} else {
+							selectedFigure = drawFigure.getFigure();
+							fillColorPicker.setValue(drawFigure.getFillColor());
+							gradientColorPicker.setValue(drawFigure.getGradientColor());
+							shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
+							beveledCheckBox.setSelected(drawFigure.isBeveled());
+							label.append(drawFigure);
+							found = true;
+						}
 					}
 				}
 				if (found) {
@@ -230,6 +235,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
+
 
 		setLeft(buttonsBox);
 		setRight(canvas);

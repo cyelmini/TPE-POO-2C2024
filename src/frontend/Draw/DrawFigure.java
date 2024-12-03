@@ -104,4 +104,9 @@ public abstract class DrawFigure {
         isBeveled = selected;
     }
 
+    public void format(DrawFigure figure) {
+        setColors(figure.getFillColor(), figure.getGradientColor());
+        setShadowType(figure.getShadowType());
+        setBeveled(figure.isBeveled());
+    }
 }
