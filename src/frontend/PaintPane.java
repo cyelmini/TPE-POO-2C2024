@@ -56,7 +56,7 @@ public class PaintPane extends BorderPane {
 	StatusPane statusPane;
 
 	// Lista de DrawFigures
-	List<DrawFigure> drawFigures = new ArrayList<>();
+	Map<Figure, DrawFigure> drawFigures = new HashMap<>();
 
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -118,7 +118,7 @@ public class PaintPane extends BorderPane {
 
 			Buttons button = (Buttons)selectedButton.getUserData();
 			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue());
-			drawFigures.add(newFigure);
+			drawFigures.put(newFigure.getFigure(), newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
 			redrawCanvas();
@@ -128,7 +128,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(DrawFigure drawFigure : drawFigures) {
+			for(DrawFigure drawFigure : drawFigures.values()) {
 				if(drawFigure.found(eventPoint)) {
 					found = true;
 					label.append(drawFigure);
@@ -146,7 +146,7 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for(DrawFigure drawFigure : drawFigures) {
+				for(DrawFigure drawFigure : drawFigures.values()) {
 					if(drawFigure.found(eventPoint)) {
 						selectedFigure = drawFigure.getFigure();
 						fillColorPicker.setValue(drawFigure.getFillColor());
@@ -165,33 +165,44 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		fillColorPicker.setOnMouseClicked(event -> {
-			changeSelectedFigureColor();
-		});
-
-		gradientColorPicker.setOnMouseClicked(event -> {
-			changeSelectedFigureColor();
-		});
-
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 
-				for(DrawFigure drawFigure : drawFigures){
-					if(drawFigure.getFigure().equals(selectedFigure)){
-						drawFigure.move(diffX, diffY);
-					}
+				if (drawFigures.containsKey(selectedFigure)) {
+					drawFigures.get(selectedFigure).move(diffX, diffY);
 				}
+
 				redrawCanvas();
 			}
 		});
 
 		deleteButton.setOnAction(event -> {
-			if (selectedFigure != null) {
-				drawFigures.removeIf(drawFigure -> drawFigure.selected(selectedFigure));
+			if(drawFigures.containsKey(selectedFigure)){
+				drawFigures.remove(selectedFigure);
+				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
+				redrawCanvas();
+			}
+		});
+
+		fillColorPicker.setOnAction(event -> {
+			if(selectionButton.isSelected()) {
+				changeSelectedFigureColor();
+			}
+		});
+
+		gradientColorPicker.setOnAction(event -> {
+			if(selectionButton.isSelected()) {
+				changeSelectedFigureColor();
+			}
+		});
+
+		shadowTypeChoiceBox.setOnAction(event -> {
+			if(drawFigures.containsKey(selectedFigure)){
+				drawFigures.get(selectedFigure).setShadowType(shadowTypeChoiceBox.getValue());
 				redrawCanvas();
 			}
 		});
@@ -201,15 +212,18 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void changeSelectedFigureColor() {
-
+		if(drawFigures.containsKey(selectedFigure)){
+			drawFigures.get(selectedFigure).setColors(fillColorPicker.getValue(), gradientColorPicker.getValue());
+			redrawCanvas();
+		}
 	}
 
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(DrawFigure drawFigure : drawFigures){
+
+		for(DrawFigure drawFigure : drawFigures.values()){
 			if(drawFigure.selected(selectedFigure)) {
 				gc.setStroke(Color.RED);
-				drawFigure.setColors(fillColorPicker.getValue(), gradientColorPicker.getValue());
 			} else {
 				gc.setStroke(lineColor);
 			}

@@ -58,6 +58,10 @@ public abstract class DrawFigure {
         this.secondaryColor = secondaryColor;
     }
 
+    public void setShadowType(ShadowType shadowType){
+        this.shadowType = shadowType;
+    }
+
     public boolean found(Point eventPoint) {
         return figure.found(eventPoint);
     }
