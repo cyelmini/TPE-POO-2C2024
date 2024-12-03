@@ -12,18 +12,27 @@ public abstract class DrawFigure {
     protected Figure figure;
     private Color primaryColor, secondaryColor;
     private ShadowType shadowType;
+    private boolean isBeveled;
 
-    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType){
+    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.gc = gc;
         this.shadowType = shadowType;
+        this.isBeveled = isBeveled;
     }
 
-    public abstract void draw();
+    public abstract void draw(Figure selectedFigure, Color lineColor);
+
+    public abstract void drawShadow();
+
+    public abstract void drawBeveled();
 
     public Figure getFigure() {
         return figure;
+    }
+    public GraphicsContext getGc(){
+        return gc;
     }
 
     public boolean selected(Figure selectedFigure) {
@@ -35,6 +44,15 @@ public abstract class DrawFigure {
     }
     public Color getGradientColor(){
         return secondaryColor;
+    }
+
+
+    public ShadowType getShadowType() {
+        return shadowType;
+    }
+
+    public boolean isBeveled(){
+        return isBeveled;
     }
 
     public void setGradientRad(){
@@ -80,6 +98,10 @@ public abstract class DrawFigure {
 
     public String toString(){
         return figure.toString();
+    }
+
+    public void setBeveled(boolean selected) {
+        isBeveled = selected;
     }
 
 }

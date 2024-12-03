@@ -1,5 +1,6 @@
 package frontend.Draw;
 
+import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.ShadowType;
@@ -10,28 +11,59 @@ public class DrawRectangle extends DrawFigure {
 
     private final Rectangle rectangle;
 
-    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType){
-        super(primaryColor, secondaryColor, gc, shadowType);
+    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
+        super(primaryColor, secondaryColor, gc, shadowType, isBeveled);
         figure = new Rectangle(topLeft, bottomRight);
-        rectangle = (Rectangle)figure;
+        rectangle = (Rectangle) getFigure();
 
     }
 
     @Override
-    public void draw(){
-
+    public void drawShadow(){
         Color shadowColor = getShadowColor();
         if (shadowColor != Color.TRANSPARENT) {
-            gc.setFill(shadowColor);
+            getGc().setFill(shadowColor);
             double offset = getOffset();
-            gc.fillRect(rectangle.getTopLeft().getX() + offset, rectangle.getTopLeft().getY() + offset, rectangle.width(), rectangle.height());
+            getGc().fillRect(rectangle.getTopLeft().getX() + offset, rectangle.getTopLeft().getY() + offset, rectangle.width(), rectangle.height());
         }
+    }
 
+    @Override
+    public void drawBeveled(){
+        if(isBeveled()){
+            double x = rectangle.getTopLeft().getX();
+            double y = rectangle.getTopLeft().getY();
+            double width = Math.abs(x - rectangle.getBottomRight().getX());
+            double height = Math.abs(y - rectangle.getBottomRight().getY());
+
+            getGc().setLineWidth(10);
+            getGc().setStroke(Color.LIGHTGRAY);
+            getGc().strokeLine(x, y, x + width, y);
+            getGc().strokeLine(x, y, x, y + height);
+
+            getGc().setStroke(Color.BLACK);
+            getGc().strokeLine(x + width, y, x + width, y + height);
+            getGc().strokeLine(x, y + height, x + width, y + height);
+            gc.setLineWidth(1);
+        }
+    }
+
+    @Override
+    public void draw(Figure selectedFigure, Color lineColor){
+        drawShadow();
         setGradientLinear();
-        gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+
+        if(selected(selectedFigure)) {
+            gc.setStroke(Color.RED);
+        } else {
+            gc.setStroke(lineColor);
+        }
+        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 rectangle.width(), rectangle.height());
-        gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+        getGc().strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 rectangle.width(), rectangle.height());
+
+        drawBeveled();
     }
 
 }

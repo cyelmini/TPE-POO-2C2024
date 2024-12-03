@@ -12,10 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class PaintPane extends BorderPane {
 
@@ -40,6 +38,9 @@ public class PaintPane extends BorderPane {
 	// Botones para las sombras
 	private ChoiceBox<ShadowType> shadowTypeChoiceBox = new ChoiceBox<>();
 
+	// Checbox biselado
+	private CheckBox beveledCheckBox = new CheckBox("Biselado");
+
 	// Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
@@ -56,7 +57,7 @@ public class PaintPane extends BorderPane {
 	StatusPane statusPane;
 
 	// Lista de DrawFigures
-	Map<Figure, DrawFigure> drawFigures = new HashMap<>();
+	Map<Figure, DrawFigure> drawFigures = new LinkedHashMap<>();
 
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -67,6 +68,10 @@ public class PaintPane extends BorderPane {
 		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
 		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
 		shadowTypeChoiceBox.setPrefWidth(90);
+
+		// Inicializar biselado
+		beveledCheckBox.setPrefWidth(90);
+		beveledCheckBox.setSelected(false);
 
 		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
 		// del grupo tools se desactivará automáticamente.
@@ -84,6 +89,7 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(new Label("Formato"));
 		buttonsBox.getChildren().add(shadowTypeChoiceBox);
+		buttonsBox.getChildren().add(beveledCheckBox);
 		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.getChildren().add(gradientColorPicker);
 
@@ -117,7 +123,8 @@ public class PaintPane extends BorderPane {
 			}
 
 			Buttons button = (Buttons)selectedButton.getUserData();
-			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue());
+			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(),
+												gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected());
 			drawFigures.put(newFigure.getFigure(), newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
@@ -151,6 +158,8 @@ public class PaintPane extends BorderPane {
 						selectedFigure = drawFigure.getFigure();
 						fillColorPicker.setValue(drawFigure.getFillColor());
 						gradientColorPicker.setValue(drawFigure.getGradientColor());
+						shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
+						beveledCheckBox.setSelected(drawFigure.isBeveled());
 						label.append(drawFigure);
 						found = true;
 					}
@@ -207,6 +216,13 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		beveledCheckBox.setOnAction(event -> {
+			if(selectionButton.isSelected() && drawFigures.containsKey(selectedFigure)){
+				drawFigures.get(selectedFigure).setBeveled(beveledCheckBox.isSelected());
+				redrawCanvas();
+			}
+		});
+
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
@@ -222,13 +238,7 @@ public class PaintPane extends BorderPane {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		for(DrawFigure drawFigure : drawFigures.values()){
-			if(drawFigure.selected(selectedFigure)) {
-				gc.setStroke(Color.RED);
-			} else {
-				gc.setStroke(lineColor);
-			}
-			gc.setFill(drawFigure.getFillColor());
-			drawFigure.draw();
+			drawFigure.draw(selectedFigure, lineColor);
 		}
 	}
 

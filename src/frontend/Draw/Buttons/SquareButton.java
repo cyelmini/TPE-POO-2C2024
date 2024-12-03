@@ -9,8 +9,11 @@ import javafx.scene.paint.Color;
 
 public class SquareButton implements Buttons{
     @Override
-    public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType) {
+    public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor,
+                                    GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
+
         double size = Math.abs(startPoint.getX() - endPoint.getX());
-        return new DrawSquare(startPoint, endPoint, primaryColor, secondaryColor, gc, shadowType, size);
+        return new DrawSquare(startPoint, endPoint, primaryColor, secondaryColor, gc, shadowType, size, isBeveled);
+
     }
 }

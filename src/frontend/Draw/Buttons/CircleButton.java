@@ -9,8 +9,11 @@ import javafx.scene.paint.Color;
 
 public class CircleButton implements Buttons{
     @Override
-    public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType) {
+    public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor,
+                                    GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
+
         double radius = Math.abs(endPoint.getX() - startPoint.getX());
-        return new DrawCircle(startPoint, radius, primaryColor, secondaryColor, gc, shadowType);
+        return new DrawCircle(startPoint, radius, primaryColor, secondaryColor, gc, shadowType, isBeveled);
+
     }
 }
