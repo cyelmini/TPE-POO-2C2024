@@ -61,8 +61,7 @@ public class PaintPane extends BorderPane {
 
 	// Lista de DrawFigures
 	private Map<Figure, DrawFigure> drawFigures = new LinkedHashMap<>();
-
-
+	
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
@@ -79,7 +78,7 @@ public class PaintPane extends BorderPane {
 		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
 		// del grupo tools se desactivará automáticamente.
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton,
-				deleteButton, copyFormatButton};
+				deleteButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -87,6 +86,10 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 		setFigureButtons();
+
+		// Inicializa botón para copiar el formato
+		copyFormatButton.setMinWidth(90);
+		copyFormatButton.setCursor(Cursor.HAND);
 
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
