@@ -31,9 +31,9 @@ public class DrawEllipse extends DrawFigure {
     @Override
     public void drawBeveled(){
         if(isBeveled()){
+
             double arcX = ellipse.width();
             double arcY = ellipse.height();
-
 
             getGc().setLineWidth(10);
             getGc().setStroke(Color.LIGHTGRAY);
@@ -49,15 +49,18 @@ public class DrawEllipse extends DrawFigure {
     public void draw(Figure selectedFigure, Color lineColor) {
         drawShadow();
 
+        drawBeveled();
+
         setGradientRad();
+
+        getGc().fillOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
+
         if(selected(selectedFigure)) {
             gc.setStroke(Color.RED);
         } else {
             gc.setStroke(lineColor);
         }
         getGc().strokeOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
-        getGc().fillOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
-
-        drawBeveled();
     }
+    
 }

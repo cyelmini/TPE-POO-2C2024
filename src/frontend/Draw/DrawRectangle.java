@@ -51,19 +51,22 @@ public class DrawRectangle extends DrawFigure {
     @Override
     public void draw(Figure selectedFigure, Color lineColor){
         drawShadow();
+
+        drawBeveled();
+
         setGradientLinear();
+
+        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+                rectangle.width(), rectangle.height());
 
         if(selected(selectedFigure)) {
             gc.setStroke(Color.RED);
         } else {
             gc.setStroke(lineColor);
         }
-        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                rectangle.width(), rectangle.height());
+
         getGc().strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
                 rectangle.width(), rectangle.height());
-
-        drawBeveled();
     }
 
 }
