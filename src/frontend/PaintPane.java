@@ -201,7 +201,7 @@ public class PaintPane extends BorderPane {
 		});
 
 		shadowTypeChoiceBox.setOnAction(event -> {
-			if(drawFigures.containsKey(selectedFigure)){
+			if(selectionButton.isSelected() && drawFigures.containsKey(selectedFigure)){
 				drawFigures.get(selectedFigure).setShadowType(shadowTypeChoiceBox.getValue());
 				redrawCanvas();
 			}
