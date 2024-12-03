@@ -18,46 +18,49 @@ import java.util.*;
 public class PaintPane extends BorderPane {
 
 	// BackEnd
-	CanvasState canvasState;
+	private CanvasState canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color defaultFillColor = Color.YELLOW;
-	Color defaultGradientColor = defaultFillColor;
+	private Canvas canvas = new Canvas(800, 600);
+	private GraphicsContext gc = canvas.getGraphicsContext2D();
+	private Color lineColor = Color.BLACK;
+	private Color defaultFillColor = Color.YELLOW;
+	private Color defaultGradientColor = defaultFillColor;
 
 	// Botones Barra Izquierda
-	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
-	ToggleButton deleteButton = new ToggleButton("Borrar");
+	private ToggleButton selectionButton = new ToggleButton("Seleccionar");
+	private ToggleButton rectangleButton = new ToggleButton("Rectángulo");
+	private ToggleButton circleButton = new ToggleButton("Círculo");
+	private ToggleButton squareButton = new ToggleButton("Cuadrado");
+	private ToggleButton ellipseButton = new ToggleButton("Elipse");
+	private ToggleButton deleteButton = new ToggleButton("Borrar");
 
 	// Botones para las sombras
 	private ChoiceBox<ShadowType> shadowTypeChoiceBox = new ChoiceBox<>();
 
-	// Checbox biselado
+	// Checkbox biselado
 	private CheckBox beveledCheckBox = new CheckBox("Biselado");
 
+	// Botón copiar formato
+	private ToggleButton copyFormatButton = new ToggleButton("Copiar fmt");
+
 	// Selector de color de relleno
-	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
+	private ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
 	//Selector de color de gradiente
-	ColorPicker gradientColorPicker = new ColorPicker(defaultGradientColor);
+	private ColorPicker gradientColorPicker = new ColorPicker(defaultGradientColor);
 
 	// Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
 	// Seleccionar una figura
-	Figure selectedFigure;
+	private Figure selectedFigure;
 
 	// StatusBar
-	StatusPane statusPane;
+	private StatusPane statusPane;
 
 	// Lista de DrawFigures
-	Map<Figure, DrawFigure> drawFigures = new LinkedHashMap<>();
+	private Map<Figure, DrawFigure> drawFigures = new LinkedHashMap<>();
 
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -75,7 +78,8 @@ public class PaintPane extends BorderPane {
 
 		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
 		// del grupo tools se desactivará automáticamente.
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton,
+				deleteButton, copyFormatButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -92,6 +96,7 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().add(beveledCheckBox);
 		buttonsBox.getChildren().add(fillColorPicker);
 		buttonsBox.getChildren().add(gradientColorPicker);
+		buttonsBox.getChildren().add(copyFormatButton);
 
 		// Formato de la VBox
 		buttonsBox.setPadding(new Insets(5));
