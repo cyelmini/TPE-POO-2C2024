@@ -2,6 +2,10 @@ package backend.model;
 
 public abstract class Figure {
 
+
+
+    public abstract Figure divideFigure();
+
     public abstract double width();
 
     public abstract double height();
@@ -16,8 +20,6 @@ public abstract class Figure {
     public abstract void turnHorizontal();
 
     public abstract void turnVertical();
-
-//    public abstract void divide();
 
     public abstract boolean equals(Object o);
 

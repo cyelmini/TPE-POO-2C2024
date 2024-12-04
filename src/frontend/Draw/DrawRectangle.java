@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 public class DrawRectangle extends DrawFigure {
 
-    private final Rectangle rectangle;
+    private Rectangle rectangle;
 
     public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
         super(primaryColor, secondaryColor, gc, shadowType, isBeveled);
@@ -83,10 +83,11 @@ public class DrawRectangle extends DrawFigure {
         rectangle.turnVertical();
     }
 
-//    @Override
-//    public void divide(){
-//        rectangle.divide();
-//    }
+    @Override
+    public DrawRectangle divide(){
+        Rectangle temp = rectangle.divideFigure();
+        return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+    }
 
     @Override
     public DrawRectangle duplicate(double offset){

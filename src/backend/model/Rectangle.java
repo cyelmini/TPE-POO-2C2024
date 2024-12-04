@@ -80,17 +80,30 @@ public class Rectangle extends Figure {
         bottomRight.setY(bottomRight.getY() + originalHeight);
     }
 
-//    @Override
-//    public void divide(){
-//        double midX = (topLeft.getX() + bottomRight.getX()) / 2;
-//        double midY = (topLeft.getY() + bottomRight.getY()) / 2;
-//    }
-
     @Override
     public boolean equals(Object o){
         return o instanceof Rectangle rectangle
                 && topLeft.equals(rectangle.getTopLeft())
                 && bottomRight.equals(rectangle.getBottomRight());
+    }
+
+    @Override
+    public Rectangle divideFigure() {
+        double centerX = (topLeft.getX() + bottomRight.getX()) / 2;
+        double centerY = (topLeft.getY() + bottomRight.getY()) / 2;
+        double newHalfHeight = height()/4;
+
+        // Crear un nuevo rectangulo con el punto centro y el punto original bottomRight
+        Rectangle newRectangle = new Rectangle(
+                new Point(centerX, centerY - newHalfHeight),
+                new Point(bottomRight.getX(), centerY + newHalfHeight)
+        );
+
+        // Actualizar el bottomRight del rectangulo actual al punto centro
+        topLeft = new Point(topLeft.getX(), centerY - newHalfHeight);
+        bottomRight = new Point(centerX, centerY + newHalfHeight);
+
+        return newRectangle;
     }
 
     @Override

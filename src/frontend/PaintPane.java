@@ -337,6 +337,14 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
+		divideButton.setOnAction(event -> {
+			validateSelectedFigure();
+			DrawFigure newFigure = drawFigures.get(selectedFigure).divide();
+			drawFigures.put(newFigure.getFigure(), newFigure);
+			canvasState.addFigure(newFigure.getFigure());
+			redrawCanvas();
+		});
+
 		setLeft(buttonsBox);
 		setRight(leftButtonsBox);
 		setCenter(canvas);

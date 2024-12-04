@@ -11,6 +11,23 @@ public class Ellipse extends Figure {
         this.sMinorAxis = sMinorAxis;
     }
 
+    @Override
+    public Ellipse divideFigure() {
+        double newSMinorAxis = sMinorAxis / 2;
+        double newSMayorAxis = sMayorAxis / 2;
+        double newCenterX = centerPoint.getX();
+        double newCenterY = centerPoint.getY();
+
+
+        // Se actualizan las figuras
+        this.centerPoint = new Point(newCenterX-newSMayorAxis/2, newCenterY);
+        this.sMinorAxis = newSMinorAxis;
+        this.sMayorAxis = newSMayorAxis;
+
+        // Se retorna la nuevas figuras
+        return new Ellipse(new Point(newCenterX+newSMayorAxis/2, newCenterY), newSMayorAxis, newSMinorAxis);
+    }
+
     // Cálculos de propiedades de las figuras
     @Override
     public double width(){

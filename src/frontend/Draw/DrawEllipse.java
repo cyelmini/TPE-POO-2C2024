@@ -82,4 +82,9 @@ public class DrawEllipse extends DrawFigure {
         return new DrawEllipse(duplicatedCenterPoint, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
     }
 
+    public DrawEllipse divide(){
+        Ellipse temp = ellipse.divideFigure();
+        return new DrawEllipse(temp.getCenterPoint(), temp.getsMayorAxis(), temp.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+    }
+
 }

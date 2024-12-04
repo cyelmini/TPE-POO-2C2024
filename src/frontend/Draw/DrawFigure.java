@@ -134,7 +134,7 @@ public abstract class DrawFigure {
 
     public abstract DrawFigure duplicate(double offset);
 
-//    public abstract void divide();
+    public abstract DrawFigure divide();
 
     // To string
     public String toString(){
