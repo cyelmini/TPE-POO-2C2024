@@ -25,4 +25,9 @@ public class Layer {
     public void changeVisibility() {
         visible = !visible;
     }
+
+    @Override
+    public String toString(){
+        return name;
+    }
 }

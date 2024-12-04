@@ -16,8 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
-//import jdk.internal.org.objectweb.asm.commons.JSRInlinerAdapter; ??
-
 
 import java.util.*;
 
@@ -62,19 +60,21 @@ public class PaintPane extends BorderPane {
 
 	//Botones Barra Derecha
 	private ToggleButton turnRightButton = new ToggleButton("Girar D");
+
 	private ToggleButton turnHorizontalButton = new ToggleButton("Voltear H");
+
 	private ToggleButton turnVerticalButton = new ToggleButton("Voltear V");
 
 	private ToggleButton duplicateButton = new ToggleButton("Duplicar");
 
 	private ToggleButton divideButton = new ToggleButton("Dividir");
 
-	
 	// Botones Barra Superior
-	private ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
 	private ToggleButton frontButton = new ToggleButton("Traer al frente");
 
 	private ToggleButton backButton = new ToggleButton("Enviar al fondo");
+
+	private ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
 
 	private ToggleButton addLayerButton = new ToggleButton("Agregar capa");
 
@@ -127,7 +127,8 @@ public class PaintPane extends BorderPane {
 		copyFormatButton.setCursor(Cursor.HAND);
 
 		//Inicializa botones de la barra derecha
-		ToggleButton[] actionsArr = {turnRightButton, turnHorizontalButton, turnVerticalButton, duplicateButton, divideButton};
+		ToggleButton[] actionsArr = {turnRightButton, turnHorizontalButton, turnVerticalButton, duplicateButton,
+				divideButton};
 		ToggleGroup actions = new ToggleGroup();
 		for(ToggleButton action : actionsArr){
 			action.setMinWidth(90);
@@ -247,7 +248,6 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-//		JSRInlinerAdapter.Instantiation drawFigures; ?????????? q es esto
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
