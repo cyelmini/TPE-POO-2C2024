@@ -35,7 +35,6 @@ public enum ShadowType {
         }
     },
     SIMPLE_INVERSE(-10.0){
-
         @Override
         public Color getColor(Color color){
             return Color.GREY;

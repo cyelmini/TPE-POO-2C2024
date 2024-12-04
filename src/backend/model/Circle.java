@@ -9,11 +9,6 @@ public class Circle extends Ellipse {
         this.radius = radius;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, getRadius());
-    }
-
     public double getRadius() {
         return getsMayorAxis()/2;
     }
@@ -29,6 +24,11 @@ public class Circle extends Ellipse {
         return o instanceof Circle circle &&
                 getCenterPoint().equals(circle.getCenterPoint())
                 && getRadius() == circle.getRadius();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, getRadius());
     }
 
 }

@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class SquareButton implements Buttons{
+
     @Override
     public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor,
                                     GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
@@ -16,4 +17,5 @@ public class SquareButton implements Buttons{
         return new DrawSquare(startPoint, endPoint, primaryColor, secondaryColor, gc, shadowType, size, isBeveled);
 
     }
+
 }

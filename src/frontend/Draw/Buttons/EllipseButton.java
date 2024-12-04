@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class EllipseButton implements Buttons{
+
     @Override
     public DrawFigure getDrawFigure(Point startPoint, Point endPoint, Color primaryColor, Color secondaryColor,
                                     GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
@@ -18,4 +19,5 @@ public class EllipseButton implements Buttons{
         return new DrawEllipse(centerPoint, sMayorAxis, sMinorAxis, primaryColor, secondaryColor, gc, shadowType, isBeveled);
 
     }
+
 }

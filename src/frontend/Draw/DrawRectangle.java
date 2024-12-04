@@ -15,7 +15,27 @@ public class DrawRectangle extends DrawFigure {
         super(primaryColor, secondaryColor, gc, shadowType, isBeveled);
         figure = new Rectangle(topLeft, bottomRight);
         rectangle = (Rectangle) getFigure();
+    }
 
+    @Override
+    public void draw(Figure selectedFigure, Color lineColor){
+        drawShadow();
+
+        drawBeveled();
+
+        setGradientLinear();
+
+        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+                rectangle.width(), rectangle.height());
+
+        if(selected(selectedFigure)) {
+            gc.setStroke(Color.RED);
+        } else {
+            gc.setStroke(lineColor);
+        }
+
+        getGc().strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
+                rectangle.width(), rectangle.height());
     }
 
     @Override
@@ -49,24 +69,32 @@ public class DrawRectangle extends DrawFigure {
     }
 
     @Override
-    public void draw(Figure selectedFigure, Color lineColor){
-        drawShadow();
+    public void turnRight(){
+        rectangle.turnRight();
+    }
 
-        drawBeveled();
+    @Override
+    public void turnHorizontal(){
+        rectangle.turnHorizontal();
+    }
 
-        setGradientLinear();
+    @Override
+    public void turnVertical(){
+        rectangle.turnVertical();
+    }
 
-        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                rectangle.width(), rectangle.height());
+//    @Override
+//    public void divide(){
+//        rectangle.divide();
+//    }
 
-        if(selected(selectedFigure)) {
-            gc.setStroke(Color.RED);
-        } else {
-            gc.setStroke(lineColor);
-        }
-
-        getGc().strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                rectangle.width(), rectangle.height());
+    @Override
+    public DrawRectangle duplicate(double offset){
+        Point duplicatedTopLeft = new Point(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY());
+        Point duplicatedBottomRight = new Point(rectangle.getBottomRight().getX(), rectangle.getBottomRight().getY());
+        duplicatedTopLeft.move(offset, offset);
+        duplicatedBottomRight.move(offset, offset);
+        return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
     }
 
 }

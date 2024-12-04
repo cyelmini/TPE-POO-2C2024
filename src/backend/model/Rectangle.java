@@ -2,40 +2,89 @@ package backend.model;
 
 public class Rectangle extends Figure {
 
-    private final Point topLeft, bottomRight;
+    private Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
 
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
+    // Cálculos de propiedades de la figura
+    @Override
     public double width(){
         return Math.abs(topLeft.getX() - bottomRight.getX());
     }
 
+    @Override
     public double height(){
         return Math.abs(topLeft.getY() - bottomRight.getY());
     }
 
+    //Getters
+    public Point getTopLeft(){
+        return topLeft;
+    }
+
+    public Point getBottomRight(){
+        return bottomRight;
+    }
+
+    //Cálculos para encontrar un punto en la figura
     @Override
     public boolean found(Point eventPoint){
         return eventPoint.getX() > getTopLeft().getX() && eventPoint.getX() < getBottomRight().getX() &&
                 eventPoint.getY() > getTopLeft().getY() && eventPoint.getY() < getBottomRight().getY();
     }
 
+    // Mueve los puntos topLeft y bottomRight el diferencial en X e Y dado
     @Override
     public void move(double diffX, double diffY){
         topLeft.move(diffX, diffY);
         bottomRight.move(diffX, diffY);
     }
+
+    // Métodos para voltear las figuras
+    @Override
+    public void turnRight() {
+        double centerX = (topLeft.getX() + bottomRight.getX()) / 2;
+        double centerY = (topLeft.getY() + bottomRight.getY()) / 2;
+
+        double currentWidth = width();
+        double currentHeight = height();
+
+        Point newTopLeft = new Point(
+                centerX - currentHeight / 2,
+                centerY - currentWidth / 2
+        );
+
+        Point newBottomRight = new Point(
+                centerX + currentHeight / 2,
+                centerY + currentWidth / 2
+        );
+
+        this.topLeft = newTopLeft;
+        this.bottomRight = newBottomRight;
+    }
+
+    @Override
+    public void turnHorizontal(){
+        double originalWidth = width();
+        topLeft.setX(topLeft.getX() + originalWidth);
+        bottomRight.setX(bottomRight.getX() + originalWidth);
+    }
+
+    @Override
+    public void turnVertical(){
+        double originalHeight = height();
+        topLeft.setY(topLeft.getY() + originalHeight);
+        bottomRight.setY(bottomRight.getY() + originalHeight);
+    }
+
+//    @Override
+//    public void divide(){
+//        double midX = (topLeft.getX() + bottomRight.getX()) / 2;
+//        double midY = (topLeft.getY() + bottomRight.getY()) / 2;
+//    }
 
     @Override
     public boolean equals(Object o){

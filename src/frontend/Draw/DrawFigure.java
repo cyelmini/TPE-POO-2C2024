@@ -15,44 +15,61 @@ public abstract class DrawFigure {
     private boolean isBeveled;
 
     public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
+        this.gc = gc;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
-        this.gc = gc;
         this.shadowType = shadowType;
         this.isBeveled = isBeveled;
     }
 
+    // Métodos de dibujo
     public abstract void draw(Figure selectedFigure, Color lineColor);
 
     public abstract void drawShadow();
 
     public abstract void drawBeveled();
 
-    public Figure getFigure() {
-        return figure;
-    }
+    //Getters
     public GraphicsContext getGc(){
         return gc;
     }
 
-    public boolean selected(Figure selectedFigure) {
-        return figure.equals(selectedFigure);
+    public Figure getFigure() {
+        return figure;
     }
 
     public Color getFillColor() {
         return primaryColor;
     }
+
     public Color getGradientColor(){
         return secondaryColor;
     }
-
 
     public ShadowType getShadowType() {
         return shadowType;
     }
 
-    public boolean isBeveled(){
-        return isBeveled;
+    public Color getShadowColor(){
+        return shadowType.getColor(primaryColor);
+    }
+
+    public double getOffset(){
+        return shadowType.getOffset();
+    }
+
+    // Setters
+    public void setPrimaryColor(Color color){
+        this.primaryColor = color;
+    }
+
+    public void setSecondaryColor(Color color) {
+        this.secondaryColor = color;
+    }
+
+    public void setColors(Color primaryColor, Color secondaryColor){
+        setPrimaryColor(primaryColor);
+        setSecondaryColor(secondaryColor);
     }
 
     public void setGradientRad(){
@@ -71,42 +88,57 @@ public abstract class DrawFigure {
         gc.setFill(linearGradient);
     }
 
-    public void setColors(Color primaryColor, Color secondaryColor){
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
-    }
-
     public void setShadowType(ShadowType shadowType){
         this.shadowType = shadowType;
-    }
-
-    public boolean found(Point eventPoint) {
-        return figure.found(eventPoint);
-    }
-
-    public void move(double diffX, double diffY){
-        figure.move(diffX, diffY);
-    }
-
-    public Color getShadowColor(){
-        return shadowType.getColor(primaryColor);
-    }
-
-    public double getOffset(){
-        return shadowType.getOffset();
-    }
-
-    public String toString(){
-        return figure.toString();
     }
 
     public void setBeveled(boolean selected) {
         isBeveled = selected;
     }
 
+    // Método que devuelve true si la figura dada es la figura
+    // de la drawFigure
+    public boolean selected(Figure selectedFigure) {
+        return figure.equals(selectedFigure);
+    }
+
+
+    public boolean isBeveled(){
+        return isBeveled;
+    }
+
+    // Metodo que devuelve true si un determinado punto está dentro de
+    // una figura
+    public boolean found(Point eventPoint) {
+        return figure.found(eventPoint);
+    }
+
+    // Método para mover la figura
+    public void move(double diffX, double diffY){
+        figure.move(diffX, diffY);
+    }
+
+    // Método que recibe un drawFigure y copia su formato
     public void format(DrawFigure figure) {
         setColors(figure.getFillColor(), figure.getGradientColor());
         setShadowType(figure.getShadowType());
         setBeveled(figure.isBeveled());
     }
+
+    // Métodos para voltear figuras
+    public abstract void turnRight();
+
+    public abstract void turnHorizontal();
+
+    public abstract void turnVertical();
+
+    public abstract DrawFigure duplicate(double offset);
+
+//    public abstract void divide();
+
+    // To string
+    public String toString(){
+        return figure.toString();
+    }
+
 }
