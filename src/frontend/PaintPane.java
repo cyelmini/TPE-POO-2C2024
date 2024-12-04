@@ -75,16 +75,10 @@ public class PaintPane extends BorderPane {
 		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
 		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
 		shadowTypeChoiceBox.setPrefWidth(90);
-		shadowTypeChoiceBox.setCursor(Cursor.HAND);
 
 		// Inicializar biselado
 		beveledCheckBox.setPrefWidth(90);
 		beveledCheckBox.setSelected(false);
-		beveledCheckBox.setCursor(Cursor.HAND);
-
-		// Cursor botones de colores
-		fillColorPicker.setCursor(Cursor.HAND);
-		gradientColorPicker.setCursor(Cursor.HAND);
 
 		// Cuando un botón es seleccionado por el usuario, cualquier otro botón que esté activado dentro
 		// del grupo tools se desactivará automáticamente.
@@ -106,9 +100,6 @@ public class PaintPane extends BorderPane {
 		turnRightButton.setMinWidth(90);
 		turnHorizontalButton.setMinWidth(90);
 		turnVerticalButton.setMinWidth(90);
-		turnRightButton.setCursor(Cursor.HAND);
-		turnHorizontalButton.setCursor(Cursor.HAND);
-		turnVerticalButton.setCursor(Cursor.HAND);
 
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
