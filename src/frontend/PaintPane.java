@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
+//import jdk.internal.org.objectweb.asm.commons.JSRInlinerAdapter; ??
 
 
 import java.util.*;
@@ -68,6 +69,9 @@ public class PaintPane extends BorderPane {
 
 	private ToggleButton divideButton = new ToggleButton("Dividir");
 
+	
+	// Botones Barra Superior
+	private ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
 	private ToggleButton frontButton = new ToggleButton("Traer al frente");
 
 	private ToggleButton backButton = new ToggleButton("Enviar al fondo");
@@ -87,8 +91,9 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	private StatusPane statusPane;
 
-	// Lista de DrawFigures
-	private Map<Figure, DrawFigure> drawFigures = new LinkedHashMap<>();
+	// Capas con drawFigures
+	private Map<Layer, Map<Figure, DrawFigure>> figureLayers = new LinkedHashMap<>();
+	
 	
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 
@@ -138,6 +143,12 @@ public class PaintPane extends BorderPane {
 			layerButton.setToggleGroup(layers);
 			layerButton.setCursor(Cursor.HAND);
 		}
+		for(int i = 1 ; i < 4 ; i++){
+			layerChoiceBox.getItems().add(new Layer(i, "Capa " + i));
+			figureLayers.put(layerChoiceBox.getItems().get(i-1), new LinkedHashMap<>());
+		}
+		layerChoiceBox.setValue(layerChoiceBox.getItems().get(0));
+		layerChoiceBox.setPrefWidth(90);
 
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
@@ -168,6 +179,7 @@ public class PaintPane extends BorderPane {
 		HBox topButtonsBox = new HBox(10);
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
+		topButtonsBox.getChildren().addAll(layerChoiceBox);
 		topButtonsBox.getChildren().addAll(addLayerButton, removeLayerButton);
 
 		//Formato de la HBox superior
@@ -208,9 +220,8 @@ public class PaintPane extends BorderPane {
 			}
 
 			Buttons button = (Buttons)selectedButton.getUserData();
-			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(),
-												gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected());
-			drawFigures.put(newFigure.getFigure(), newFigure);
+			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected());
+			figureLayers.get(layerChoiceBox.getValue()).put(newFigure.getFigure(), newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			startPoint = null;
 			redrawCanvas();
@@ -220,10 +231,13 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(DrawFigure drawFigure : drawFigures.values()) {
-				if(drawFigure.found(eventPoint)) {
-					found = true;
-					label.append(drawFigure);
+			for(Layer layer : figureLayers.keySet()){
+				for(DrawFigure drawFigure : figureLayers.get(layer).values()){
+					// verificar que no detecta figuras invisibles, si no agregar eso
+					if(drawFigure.found(eventPoint)){
+						found = true;
+						label.append(drawFigure);
+					}
 				}
 			}
 			if(found) {
@@ -233,24 +247,27 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+//		JSRInlinerAdapter.Instantiation drawFigures; ?????????? q es esto
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for(DrawFigure drawFigure : drawFigures.values()) {
-					if(drawFigure.found(eventPoint)) {
-						if(selectedFigure != null && copyFormatButton.isSelected()){
-							drawFigure.format(drawFigures.get(selectedFigure));
-							copyFormatButton.setSelected(false);
-						} else {
-							selectedFigure = drawFigure.getFigure();
-							fillColorPicker.setValue(drawFigure.getFillColor());
-							gradientColorPicker.setValue(drawFigure.getGradientColor());
-							shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
-							beveledCheckBox.setSelected(drawFigure.isBeveled());
-							label.append(drawFigure);
-							found = true;
+				for(Layer layer : figureLayers.keySet()) {
+					for (DrawFigure drawFigure : figureLayers.get(layer).values()) {
+						if (drawFigure.found(eventPoint)) {
+							if (selectedFigure != null && copyFormatButton.isSelected()) {
+								drawFigure.format(figureLayers.get(layer).get(selectedFigure));
+								copyFormatButton.setSelected(false);
+							} else {
+								selectedFigure = drawFigure.getFigure();
+								fillColorPicker.setValue(drawFigure.getFillColor());
+								gradientColorPicker.setValue(drawFigure.getGradientColor());
+								shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
+								beveledCheckBox.setSelected(drawFigure.isBeveled());
+								label.append(drawFigure);
+								found = true;
+							}
 						}
 					}
 				}
@@ -269,9 +286,11 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-
-				if (drawFigures.containsKey(selectedFigure)) {
-					drawFigures.get(selectedFigure).move(diffX, diffY);
+				
+				for(Layer layer : figureLayers.keySet()){
+					if(figureLayers.get(layer).containsKey(selectedFigure)){
+						figureLayers.get(layer).get(selectedFigure).move(diffX, diffY);
+					}
 				}
 
 				redrawCanvas();
@@ -279,68 +298,71 @@ public class PaintPane extends BorderPane {
 		});
 
 		deleteButton.setOnAction(event -> {
-			if(drawFigures.containsKey(selectedFigure)){
-				drawFigures.remove(selectedFigure);
-				canvasState.deleteFigure(selectedFigure);
-				selectedFigure = null;
-				redrawCanvas();
+			for(Layer layer : figureLayers.keySet()){
+				if(figureLayers.get(layer).containsKey(selectedFigure)){
+					figureLayers.get(layer).remove(selectedFigure);
+					canvasState.deleteFigure(selectedFigure);
+					selectedFigure = null;
+					redrawCanvas();
+					return;
+				}
 			}
 		});
 
 		fillColorPicker.setOnAction(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).setPrimaryColor(fillColorPicker.getValue());
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).setPrimaryColor(fillColorPicker.getValue());
 			redrawCanvas();
 		});
 
 		gradientColorPicker.setOnAction(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).setSecondaryColor(gradientColorPicker.getValue());
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).setSecondaryColor(gradientColorPicker.getValue());
 			redrawCanvas();
 		});
 
 		shadowTypeChoiceBox.setOnAction(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).setShadowType(shadowTypeChoiceBox.getValue());
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).setShadowType(shadowTypeChoiceBox.getValue());
 			redrawCanvas();
 		});
 
 		beveledCheckBox.setOnAction(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).setBeveled(beveledCheckBox.isSelected());
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).setBeveled(beveledCheckBox.isSelected());
 			redrawCanvas();
 		});
 
 		turnRightButton.setOnMouseClicked(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).turnRight();
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).turnRight();
 			redrawCanvas();
 		});
 
 		turnHorizontalButton.setOnMouseClicked(event ->{
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).turnHorizontal();
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).turnHorizontal();
 			redrawCanvas();
 		});
 
 		turnVerticalButton.setOnMouseClicked(event -> {
-			validateSelectedFigure();
-			drawFigures.get(selectedFigure).turnVertical();
+			Layer temp = validateSelectedFigureLayer();
+			figureLayers.get(temp).get(selectedFigure).turnVertical();
 			redrawCanvas();
 		});
 
 		duplicateButton.setOnAction(event -> {
-			validateSelectedFigure();
-			DrawFigure newFigure = drawFigures.get(selectedFigure).duplicate(duplicateOffset);
-			drawFigures.put(newFigure.getFigure(), newFigure);
+			Layer temp  = validateSelectedFigureLayer();
+			DrawFigure newFigure = figureLayers.get(temp).get(selectedFigure).duplicate(duplicateOffset);
+			figureLayers.get(temp).put(newFigure.getFigure(), newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			redrawCanvas();
 		});
 
 		divideButton.setOnAction(event -> {
-			validateSelectedFigure();
-			DrawFigure newFigure = drawFigures.get(selectedFigure).divide();
-			drawFigures.put(newFigure.getFigure(), newFigure);
+			Layer temp  = validateSelectedFigureLayer();
+			DrawFigure newFigure = figureLayers.get(temp).get(selectedFigure).divide();
+			figureLayers.get(temp).put(newFigure.getFigure(), newFigure);
 			canvasState.addFigure(newFigure.getFigure());
 			redrawCanvas();
 		});
@@ -349,19 +371,15 @@ public class PaintPane extends BorderPane {
 		setRight(leftButtonsBox);
 		setCenter(canvas);
 	}
-
-	private void changeSelectedFigureColor() {
-		if(drawFigures.containsKey(selectedFigure)){
-			drawFigures.get(selectedFigure).setColors(fillColorPicker.getValue(), gradientColorPicker.getValue());
-			redrawCanvas();
-		}
-	}
-
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		for(DrawFigure drawFigure : drawFigures.values()){
-			drawFigure.draw(selectedFigure, lineColor);
+		for(Layer layer : figureLayers.keySet()){
+			if(layer.isVisible()){
+				for(DrawFigure drawFigure : figureLayers.get(layer).values()){
+					drawFigure.draw(selectedFigure, lineColor);
+				};
+			}
 		}
 	}
 
@@ -376,9 +394,11 @@ public class PaintPane extends BorderPane {
 	}
 
 	// Validaciones de selección de figuras
-	public void validateSelectedFigure() {
-		if(selectionButton.isSelected() && selectedFigure != null && drawFigures.containsKey(selectedFigure)){
-			return;
+	public Layer validateSelectedFigureLayer() {
+		for(Layer layer : figureLayers.keySet()){
+			if(selectionButton.isSelected() && selectedFigure != null && figureLayers.get(layer).containsKey(selectedFigure)){
+				return layer;
+			}
 		}
 		throw new RuntimeException("No se ha seleccionado ninguna figura");
 	}
