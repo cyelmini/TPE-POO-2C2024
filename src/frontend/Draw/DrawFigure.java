@@ -25,7 +25,7 @@ public abstract class DrawFigure {
         this.layer = layer;
     }
 
-    // Métodos de dibujo
+    // Metodos de dibujo
     public abstract void draw(Figure selectedFigure, Color lineColor);
 
     public abstract void drawShadow();
@@ -103,29 +103,26 @@ public abstract class DrawFigure {
         isBeveled = selected;
     }
 
-    // Método que devuelve true si la figura dada es la figura
-    // de la drawFigure
+    // Metodo que devuelve true si la figura dada es la figura de la drawFigure
     public boolean selected(Figure selectedFigure) {
         return figure.equals(selectedFigure);
     }
-
 
     public boolean isBeveled(){
         return isBeveled;
     }
 
-    // Metodo que devuelve true si un determinado punto está dentro de
-    // una figura
+    // Metodo que devuelve true si un determinado punto está dentro de una figura
     public boolean found(Point eventPoint) {
         return figure.found(eventPoint);
     }
 
-    // Método para mover la figura
+    // Metodo para mover la figura
     public void move(double diffX, double diffY){
         figure.move(diffX, diffY);
     }
 
-    // Método que recibe un drawFigure y copia su formato
+    // Metodo que recibe un drawFigure y copia su formato
     public void format(DrawFigure figure) {
         setColors(figure.getFillColor(), figure.getGradientColor());
         setShadowType(figure.getShadowType());
