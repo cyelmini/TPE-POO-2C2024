@@ -3,6 +3,7 @@ package frontend.Draw;
 import backend.model.Ellipse;
 import backend.model.Figure;
 import backend.model.Point;
+import frontend.Layer;
 import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -12,8 +13,8 @@ public class DrawEllipse extends DrawFigure {
 
     private final Ellipse ellipse;
 
-    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
-        super(primaryColor, secondaryColor, gc, shadowType, isBeveled);
+    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer) {
+        super(primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
         figure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
         ellipse = (Ellipse) figure;
     }
@@ -79,12 +80,12 @@ public class DrawEllipse extends DrawFigure {
     public DrawEllipse duplicate(double offset){
         Point duplicatedCenterPoint = new Point(ellipse.getCenterPoint().getX(), ellipse.getCenterPoint().getY());
         duplicatedCenterPoint.move(offset, offset);
-        return new DrawEllipse(duplicatedCenterPoint, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+        return new DrawEllipse(duplicatedCenterPoint, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
     }
 
     public DrawEllipse divide(){
         Ellipse temp = ellipse.divideFigure();
-        return new DrawEllipse(temp.getCenterPoint(), temp.getsMayorAxis(), temp.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+        return new DrawEllipse(temp.getCenterPoint(), temp.getsMayorAxis(), temp.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
     }
 
 }

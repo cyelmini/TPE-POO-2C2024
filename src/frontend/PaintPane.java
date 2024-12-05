@@ -63,19 +63,16 @@ public class PaintPane extends BorderPane {
 	private ToggleButton turnRightButton = new ToggleButton("Girar D");
 	private ToggleButton turnHorizontalButton = new ToggleButton("Voltear H");
 	private ToggleButton turnVerticalButton = new ToggleButton("Voltear V");
-
 	private ToggleButton duplicateButton = new ToggleButton("Duplicar");
-
 	private ToggleButton divideButton = new ToggleButton("Dividir");
 
+	// Botones Barra Superior
 	private ToggleButton frontButton = new ToggleButton("Traer al frente");
-
 	private ToggleButton backButton = new ToggleButton("Enviar al fondo");
-
 	private ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
-
+	private RadioButton showLayerButton = new RadioButton("Mostrar");
+	private RadioButton hideLayerButton = new RadioButton("Ocultar");
 	private ToggleButton addLayerButton = new ToggleButton("Agregar capa");
-
 	private ToggleButton removeLayerButton = new ToggleButton("Eliminar capa");
 
 	/* ------------------------------------ Dibujo de figuras -------------------------------------- */
@@ -149,14 +146,23 @@ public class PaintPane extends BorderPane {
 			layerButton.setToggleGroup(layers);
 			layerButton.setCursor(Cursor.HAND);
 		}
+
+		// Inicializar choiceBox capas
 		for(int i = 1 ; i < 4 ; i++) {
-			layersMap.put(new Layer("Capa " + i, i, true), new LinkedList<>());
+			layersMap.put(new Layer("Capa " + i, i), new LinkedList<>());
 		}
 		layerChoiceBox.setValue(layersMap.keySet().iterator().next());
 		layerChoiceBox.getItems().addAll(layersMap.keySet());
 		layerChoiceBox.setMinWidth(90);
 		layerChoiceBox.setCursor(Cursor.HAND);
 
+		// Inicializar botones mostrar y ocultar capas
+		ToggleGroup showHide = new ToggleGroup();
+		showLayerButton.setToggleGroup(showHide);
+		showLayerButton.setCursor(Cursor.HAND);
+		hideLayerButton.setToggleGroup(showHide);
+		showLayerButton.setCursor(Cursor.HAND);
+		showHide.selectToggle(showLayerButton);
 
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
@@ -188,7 +194,7 @@ public class PaintPane extends BorderPane {
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
 		topButtonsBox.getChildren().addAll(layerChoiceBox);
-		topButtonsBox.getChildren().addAll(addLayerButton, removeLayerButton);
+		topButtonsBox.getChildren().addAll(showLayerButton, hideLayerButton, addLayerButton, removeLayerButton);
 
 		//Formato de la HBox superior
 		setTop(topButtonsBox);
@@ -229,7 +235,7 @@ public class PaintPane extends BorderPane {
 
 			Buttons button = (Buttons)selectedButton.getUserData();
 			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(),
-												gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected());
+												gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected(), layerChoiceBox.getValue());
 			drawFigures.add(newFigure);
 			layersMap.putIfAbsent(layerChoiceBox.getValue(), new LinkedList<>());
 			layersMap.get(layerChoiceBox.getValue()).add(newFigure);
@@ -271,6 +277,7 @@ public class PaintPane extends BorderPane {
 							gradientColorPicker.setValue(drawFigure.getGradientColor());
 							shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
 							beveledCheckBox.setSelected(drawFigure.isBeveled());
+							layerChoiceBox.setValue(drawFigure.getLayer());
 							label.append(drawFigure);
 							found = true;
 						}
@@ -303,6 +310,7 @@ public class PaintPane extends BorderPane {
 			if (selectedFigure != null && canvasState.contains(selectedFigure.getFigure())) {
 				drawFigures.remove(selectedFigure);
 				canvasState.remove(selectedFigure.getFigure());
+				layersMap.get(selectedFigure.getLayer()).remove(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
@@ -374,6 +382,51 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
+
+		showLayerButton.setOnAction(event -> {
+			layerChoiceBox.getValue().setVisible(true);
+			redrawCanvas();
+		});
+
+		hideLayerButton.setOnAction(event -> {
+			layerChoiceBox.getValue().setVisible(false);
+			redrawCanvas();
+		});
+
+		frontButton.setOnAction(event -> {
+			if(selectedFigure != null) {
+				layersMap.get(layerChoiceBox.getValue()).remove(selectedFigure);
+				layersMap.get(layerChoiceBox.getValue()).add(selectedFigure);
+				redrawCanvas();
+			}
+		});
+
+		backButton.setOnAction(event -> {
+			if(selectedFigure != null) {
+				layersMap.get(layerChoiceBox.getValue()).remove(selectedFigure);
+				layersMap.get(layerChoiceBox.getValue()).addFirst(selectedFigure);
+				redrawCanvas();
+			}
+		});
+
+		addLayerButton.setOnAction(event ->{
+			Layer lastLayer = layerChoiceBox.getItems().getLast();
+			Layer newLayer = new Layer("Capa " + (lastLayer.getNumber() + 1), lastLayer.getNumber() + 1);
+			layersMap.put(newLayer, new LinkedList<>());
+			layerChoiceBox.getItems().add(newLayer);
+			layerChoiceBox.setValue(newLayer);
+			redrawCanvas();
+		});
+
+		removeLayerButton.setOnAction(event -> {
+			if(layerChoiceBox.getValue().getNumber() > 3){
+				layersMap.remove(layerChoiceBox.getValue());
+				layerChoiceBox.getItems().remove(layerChoiceBox.getValue());
+				layerChoiceBox.setValue(layerChoiceBox.getItems().getFirst());
+				redrawCanvas();
+			}
+		});
+
 
 		setLeft(buttonsBox);
 		setRight(leftButtonsBox);

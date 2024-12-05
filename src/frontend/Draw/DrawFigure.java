@@ -2,6 +2,7 @@ package frontend.Draw;
 
 import backend.model.Figure;
 import backend.model.Point;
+import frontend.Layer;
 import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
@@ -13,13 +14,15 @@ public abstract class DrawFigure {
     private Color primaryColor, secondaryColor;
     private ShadowType shadowType;
     private boolean isBeveled;
+    private final Layer layer;
 
-    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
+    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer){
         this.gc = gc;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
         this.shadowType = shadowType;
         this.isBeveled = isBeveled;
+        this.layer = layer;
     }
 
     // Métodos de dibujo
@@ -56,6 +59,10 @@ public abstract class DrawFigure {
 
     public double getOffset(){
         return shadowType.getOffset();
+    }
+
+    public Layer getLayer() {
+        return layer;
     }
 
     // Setters

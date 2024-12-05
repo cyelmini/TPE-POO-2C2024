@@ -3,6 +3,7 @@ package frontend.Draw;
 import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
+import frontend.Layer;
 import frontend.ShadowType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -11,8 +12,8 @@ public class DrawRectangle extends DrawFigure {
 
     private Rectangle rectangle;
 
-    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled){
-        super(primaryColor, secondaryColor, gc, shadowType, isBeveled);
+    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer){
+        super(primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
         figure = new Rectangle(topLeft, bottomRight);
         rectangle = (Rectangle) getFigure();
     }
@@ -86,7 +87,7 @@ public class DrawRectangle extends DrawFigure {
     @Override
     public DrawRectangle divide(){
         Rectangle temp = rectangle.divideFigure();
-        return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+        return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class DrawRectangle extends DrawFigure {
         Point duplicatedBottomRight = new Point(rectangle.getBottomRight().getX(), rectangle.getBottomRight().getY());
         duplicatedTopLeft.move(offset, offset);
         duplicatedBottomRight.move(offset, offset);
-        return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled());
+        return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
     }
 
 }

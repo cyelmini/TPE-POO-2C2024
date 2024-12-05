@@ -6,18 +6,17 @@ public class Layer {
     private int number;
 
     private boolean visible = true;
-     public Layer (String name, int number, boolean visible){
+     public Layer (String name, int number){
         this.name = name;
         this.number = number;
-        this.visible = visible;
-    }
+     }
 
     public boolean isVisible(){
          return visible;
     }
 
-    public void changeVisibility(){
-        visible = !visible;
+    public void setVisible(boolean value){
+        visible = value;
     }
 
     @Override
@@ -25,4 +24,7 @@ public class Layer {
         return  name;
     }
 
+    public int getNumber() {
+         return number;
+    }
 }
