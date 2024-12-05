@@ -370,6 +370,7 @@ public class PaintPane extends BorderPane {
 				DrawFigure newFigure = selectedFigure.duplicate(duplicateOffset);
 				drawFigures.add(newFigure);
 				canvasState.add(newFigure.getFigure());
+				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
 			}
 		});
@@ -379,6 +380,7 @@ public class PaintPane extends BorderPane {
 				DrawFigure newFigure = selectedFigure.divide();
 				drawFigures.add(newFigure);
 				canvasState.add(newFigure.getFigure());
+				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
 			}
 		});
