@@ -72,6 +72,8 @@ public class PaintPane extends BorderPane {
 
 	private ToggleButton backButton = new ToggleButton("Enviar al fondo");
 
+	private ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
+
 	private ToggleButton addLayerButton = new ToggleButton("Agregar capa");
 
 	private ToggleButton removeLayerButton = new ToggleButton("Eliminar capa");
@@ -115,10 +117,16 @@ public class PaintPane extends BorderPane {
 		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
 		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
 		shadowTypeChoiceBox.setPrefWidth(90);
+		shadowTypeChoiceBox.setCursor(Cursor.HAND);
 
 		// Inicializar biselado
 		beveledCheckBox.setPrefWidth(90);
 		beveledCheckBox.setSelected(false);
+		beveledCheckBox.setCursor(Cursor.HAND);
+
+		// Color pickers
+		fillColorPicker.setCursor(Cursor.HAND);
+		gradientColorPicker.setCursor(Cursor.HAND);
 
 		// Inicializa botón para copiar el formato
 		copyFormatButton.setMinWidth(90);
@@ -141,6 +149,14 @@ public class PaintPane extends BorderPane {
 			layerButton.setToggleGroup(layers);
 			layerButton.setCursor(Cursor.HAND);
 		}
+		for(int i = 1 ; i < 4 ; i++) {
+			layersMap.put(new Layer("Capa " + i, i, true), new LinkedList<>());
+		}
+		layerChoiceBox.setValue(layersMap.keySet().iterator().next());
+		layerChoiceBox.getItems().addAll(layersMap.keySet());
+		layerChoiceBox.setMinWidth(90);
+		layerChoiceBox.setCursor(Cursor.HAND);
+
 
 		// Se crea un VBox para los botones de la barra izquierda
 		VBox buttonsBox = new VBox(10);
@@ -171,6 +187,7 @@ public class PaintPane extends BorderPane {
 		HBox topButtonsBox = new HBox(10);
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
+		topButtonsBox.getChildren().addAll(layerChoiceBox);
 		topButtonsBox.getChildren().addAll(addLayerButton, removeLayerButton);
 
 		//Formato de la HBox superior
@@ -214,6 +231,8 @@ public class PaintPane extends BorderPane {
 			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(), gradientColorPicker.getValue(),
 												gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected());
 			drawFigures.add(newFigure);
+			layersMap.putIfAbsent(layerChoiceBox.getValue(), new LinkedList<>());
+			layersMap.get(layerChoiceBox.getValue()).add(newFigure);
 			canvasState.add(newFigure.getFigure());
 			startPoint = null;
 			redrawCanvas();
@@ -290,61 +309,70 @@ public class PaintPane extends BorderPane {
 		});
 
 		fillColorPicker.setOnAction(event -> {
-			validateSelectedFigure();
-			selectedFigure.setPrimaryColor(fillColorPicker.getValue());
-			redrawCanvas();
+			if(selectedFigure != null){
+				selectedFigure.setPrimaryColor(fillColorPicker.getValue());
+				redrawCanvas();
+			}
 		});
 
 		gradientColorPicker.setOnAction(event -> {
-			validateSelectedFigure();
-			selectedFigure.setSecondaryColor(gradientColorPicker.getValue());
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.setSecondaryColor(gradientColorPicker.getValue());
+				redrawCanvas();
+			}
 		});
 
 		shadowTypeChoiceBox.setOnAction(event -> {
-			validateSelectedFigure();
-			selectedFigure.setShadowType(shadowTypeChoiceBox.getValue());
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.setShadowType(shadowTypeChoiceBox.getValue());
+				redrawCanvas();
+			}
 		});
 
 		beveledCheckBox.setOnAction(event -> {
-			validateSelectedFigure();
-			selectedFigure.setBeveled(beveledCheckBox.isSelected());
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.setBeveled(beveledCheckBox.isSelected());
+				redrawCanvas();
+			}
 		});
 
 		turnRightButton.setOnMouseClicked(event -> {
-			validateSelectedFigure();
-			selectedFigure.turnRight();
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.turnRight();
+				redrawCanvas();
+			}
 		});
 
 		turnHorizontalButton.setOnMouseClicked(event ->{
-			validateSelectedFigure();
-			selectedFigure.turnHorizontal();
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.turnHorizontal();
+				redrawCanvas();
+			}
 		});
 
 		turnVerticalButton.setOnMouseClicked(event -> {
-			validateSelectedFigure();
-			selectedFigure.turnVertical();
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.turnVertical();
+				redrawCanvas();
+			}
 		});
 
 		duplicateButton.setOnAction(event -> {
-			validateSelectedFigure();
-			DrawFigure newFigure = selectedFigure.duplicate(duplicateOffset);
-			drawFigures.add(newFigure);
-			canvasState.add(newFigure.getFigure());
-			redrawCanvas();
+			if(selectedFigure != null) {
+				DrawFigure newFigure = selectedFigure.duplicate(duplicateOffset);
+				drawFigures.add(newFigure);
+				canvasState.add(newFigure.getFigure());
+				redrawCanvas();
+			}
 		});
 
 		divideButton.setOnAction(event -> {
-			validateSelectedFigure();
-			DrawFigure newFigure = selectedFigure.divide();
-			drawFigures.add(newFigure);
-			canvasState.add(newFigure.getFigure());
-			redrawCanvas();
+			if(selectedFigure != null) {
+				DrawFigure newFigure = selectedFigure.divide();
+				drawFigures.add(newFigure);
+				canvasState.add(newFigure.getFigure());
+				redrawCanvas();
+			}
 		});
 
 		setLeft(buttonsBox);
@@ -362,11 +390,15 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-		for(DrawFigure drawFigure : drawFigures){
-			if(selectedFigure == null){
-				drawFigure.draw(null, lineColor);
-			} else {
-				drawFigure.draw(selectedFigure.getFigure(), lineColor);
+		for(Layer layer : layersMap.keySet()){
+			if(layer.isVisible()){
+				for(DrawFigure drawFigure : layersMap.get(layer)){
+					if(selectedFigure == null){
+						drawFigure.draw(null, lineColor);
+					} else {
+						drawFigure.draw(selectedFigure.getFigure(), lineColor);
+					}
+				}
 			}
 		}
 	}
@@ -381,12 +413,5 @@ public class PaintPane extends BorderPane {
 		squareButton.setUserData(new SquareButton());
 	}
 
-	// Validaciones de selección de figuras
-	public void validateSelectedFigure() {
-		if(selectionButton.isSelected() && selectedFigure != null && canvasState.contains(selectedFigure.getFigure())){
-			return;
-		}
-		throw new RuntimeException("No se ha seleccionado ninguna figura");
-	}
 
 }

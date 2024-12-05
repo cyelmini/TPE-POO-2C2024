@@ -14,7 +14,7 @@ public class SquareButton implements Buttons{
                                     GraphicsContext gc, ShadowType shadowType, boolean isBeveled) {
 
         double size = Math.abs(startPoint.getX() - endPoint.getX());
-        return new DrawSquare(startPoint, endPoint, primaryColor, secondaryColor, gc, shadowType, size, isBeveled);
+        return new DrawSquare(startPoint, primaryColor, secondaryColor, gc, shadowType, size, isBeveled);
 
     }
 
