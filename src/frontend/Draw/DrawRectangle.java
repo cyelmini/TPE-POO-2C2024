@@ -10,12 +10,16 @@ import javafx.scene.paint.Color;
 
 public class DrawRectangle extends DrawFigure {
 
-    private Rectangle rectangle;
+    private final Rectangle rectangle;
 
     public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer){
         super(primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
         figure = new Rectangle(topLeft, bottomRight);
         rectangle = (Rectangle) getFigure();
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
     }
 
     @Override
@@ -26,8 +30,8 @@ public class DrawRectangle extends DrawFigure {
 
         setGradientLinear();
 
-        getGc().fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                rectangle.width(), rectangle.height());
+        getGc().fillRect(getRectangle().getTopLeft().getX(), getRectangle().getTopLeft().getY(),
+                getRectangle().width(), getRectangle().height());
 
         if(selected(selectedFigure)) {
             gc.setStroke(Color.RED);
@@ -35,8 +39,8 @@ public class DrawRectangle extends DrawFigure {
             gc.setStroke(lineColor);
         }
 
-        getGc().strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-                rectangle.width(), rectangle.height());
+        getGc().strokeRect(getRectangle().getTopLeft().getX(), getRectangle().getTopLeft().getY(),
+                getRectangle().width(), getRectangle().height());
     }
 
     @Override
@@ -45,17 +49,17 @@ public class DrawRectangle extends DrawFigure {
         if (shadowColor != Color.TRANSPARENT) {
             getGc().setFill(shadowColor);
             double offset = getOffset();
-            getGc().fillRect(rectangle.getTopLeft().getX() + offset, rectangle.getTopLeft().getY() + offset, rectangle.width(), rectangle.height());
+            getGc().fillRect(getRectangle().getTopLeft().getX() + offset, getRectangle().getTopLeft().getY() + offset, getRectangle().width(), getRectangle().height());
         }
     }
 
     @Override
     public void drawBeveled(){
         if(isBeveled()){
-            double x = rectangle.getTopLeft().getX();
-            double y = rectangle.getTopLeft().getY();
-            double width = Math.abs(x - rectangle.getBottomRight().getX());
-            double height = Math.abs(y - rectangle.getBottomRight().getY());
+            double x = getRectangle().getTopLeft().getX();
+            double y = getRectangle().getTopLeft().getY();
+            double width = Math.abs(x - getRectangle().getBottomRight().getX());
+            double height = Math.abs(y - getRectangle().getBottomRight().getY());
 
             getGc().setLineWidth(10);
             getGc().setStroke(Color.LIGHTGRAY);
@@ -71,29 +75,29 @@ public class DrawRectangle extends DrawFigure {
 
     @Override
     public void turnRight(){
-        rectangle.turnRight();
+        getRectangle().turnRight();
     }
 
     @Override
     public void turnHorizontal(){
-        rectangle.turnHorizontal();
+        getRectangle().turnHorizontal();
     }
 
     @Override
     public void turnVertical(){
-        rectangle.turnVertical();
+        getRectangle().turnVertical();
     }
 
     @Override
     public DrawRectangle divide(){
-        Rectangle temp = rectangle.divideFigure();
+        Rectangle temp = getRectangle().divideFigure();
         return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
     }
 
     @Override
     public DrawRectangle duplicate(double offset){
-        Point duplicatedTopLeft = new Point(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY());
-        Point duplicatedBottomRight = new Point(rectangle.getBottomRight().getX(), rectangle.getBottomRight().getY());
+        Point duplicatedTopLeft = new Point(getRectangle().getTopLeft().getX(), getRectangle().getTopLeft().getY());
+        Point duplicatedBottomRight = new Point(getRectangle().getBottomRight().getX(), getRectangle().getBottomRight().getY());
         duplicatedTopLeft.move(offset, offset);
         duplicatedBottomRight.move(offset, offset);
         return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
