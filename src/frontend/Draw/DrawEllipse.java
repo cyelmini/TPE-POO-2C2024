@@ -13,10 +13,11 @@ public class DrawEllipse extends DrawFigure {
 
     private final Ellipse ellipse;
 
-    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer) {
+    public DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor,
+                       GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer) {
         super(primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
-        figure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-        ellipse = (Ellipse) figure;
+        setFigure(new Ellipse(centerPoint, sMayorAxis, sMinorAxis));
+        ellipse = (Ellipse)getFigure();
     }
 
     @Override
@@ -30,9 +31,9 @@ public class DrawEllipse extends DrawFigure {
         getGc().fillOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
 
         if(selected(selectedFigure)) {
-            gc.setStroke(Color.RED);
+            getGc().setStroke(Color.RED);
         } else {
-            gc.setStroke(lineColor);
+            getGc().setStroke(lineColor);
         }
         getGc().strokeOval(ellipse.width(), ellipse.height(), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
     }
@@ -43,7 +44,8 @@ public class DrawEllipse extends DrawFigure {
         if (shadowColor != Color.TRANSPARENT) {
             getGc().setFill(shadowColor);
             double offset = getOffset();
-            getGc().fillOval(ellipse.width() + offset, ellipse.height() + offset, ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
+            getGc().fillOval(ellipse.width() + offset, ellipse.height() + offset, ellipse.getsMayorAxis(),
+                    ellipse.getsMinorAxis());
         }
     }
 
@@ -58,7 +60,7 @@ public class DrawEllipse extends DrawFigure {
             getGc().strokeArc(arcX, arcY, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), 45, 180, ArcType.OPEN);
             getGc().setStroke(Color.BLACK);
             getGc().strokeArc(arcX, arcY, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), 225, 180, ArcType.OPEN);
-            gc.setLineWidth(1);
+            getGc().setLineWidth(1);
         }
     }
 
@@ -80,12 +82,14 @@ public class DrawEllipse extends DrawFigure {
     public DrawEllipse duplicate(double offset){
         Point duplicatedCenterPoint = new Point(ellipse.getCenterPoint().getX(), ellipse.getCenterPoint().getY());
         duplicatedCenterPoint.move(offset, offset);
-        return new DrawEllipse(duplicatedCenterPoint, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
+        return new DrawEllipse(duplicatedCenterPoint, ellipse.getsMayorAxis(), ellipse.getsMinorAxis(), getFillColor(),
+                getGradientColor(), getGc(), getShadowType(), isBeveled(), getLayer());
     }
 
     public DrawEllipse divide(){
         Ellipse temp = ellipse.divideFigure();
-        return new DrawEllipse(temp.getCenterPoint(), temp.getsMayorAxis(), temp.getsMinorAxis(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
+        return new DrawEllipse(temp.getCenterPoint(), temp.getsMayorAxis(), temp.getsMinorAxis(), getFillColor(),
+                getGradientColor(), getGc(), getShadowType(), isBeveled(), getLayer());
     }
 
 }

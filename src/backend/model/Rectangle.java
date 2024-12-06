@@ -9,7 +9,7 @@ public class Rectangle extends Figure {
         this.bottomRight = bottomRight;
     }
 
-    // Cálculos de propiedades de la figura
+    /* -----------------------------------  Calculos de propiedades de la figura ------------------------------ */
     @Override
     public double width(){
         return Math.abs(topLeft.getX() - bottomRight.getX());
@@ -20,7 +20,7 @@ public class Rectangle extends Figure {
         return Math.abs(topLeft.getY() - bottomRight.getY());
     }
 
-    //Getters
+    /* --------------------------------------------- Getters ------------------------------------------------- */
     public Point getTopLeft(){
         return topLeft;
     }
@@ -29,21 +29,20 @@ public class Rectangle extends Figure {
         return bottomRight;
     }
 
-    //Cálculos para encontrar un punto en la figura
+    /* ------------------------------- Implementacion de las funcionalidades ------------------------------- */
+
     @Override
     public boolean found(Point eventPoint){
         return eventPoint.getX() > getTopLeft().getX() && eventPoint.getX() < getBottomRight().getX() &&
                 eventPoint.getY() > getTopLeft().getY() && eventPoint.getY() < getBottomRight().getY();
     }
 
-    // Mueve los puntos topLeft y bottomRight el diferencial en X e Y dado
     @Override
     public void move(double diffX, double diffY){
         topLeft.move(diffX, diffY);
         bottomRight.move(diffX, diffY);
     }
 
-    // Métodos para voltear las figuras
     @Override
     public void turnRight() {
         double centerX = (topLeft.getX() + bottomRight.getX()) / 2;
@@ -81,13 +80,6 @@ public class Rectangle extends Figure {
     }
 
     @Override
-    public boolean equals(Object o){
-        return o instanceof Rectangle rectangle
-                && topLeft.equals(rectangle.getTopLeft())
-                && bottomRight.equals(rectangle.getBottomRight());
-    }
-
-    @Override
     public Rectangle divideFigure() {
         double centerX = (topLeft.getX() + bottomRight.getX()) / 2;
         double centerY = (topLeft.getY() + bottomRight.getY()) / 2;
@@ -104,6 +96,15 @@ public class Rectangle extends Figure {
         bottomRight = new Point(centerX, centerY + newHalfHeight);
 
         return newRectangle;
+    }
+
+    /* -------------------------------------------------------------------------------------------------- */
+
+    @Override
+    public boolean equals(Object o){
+        return o instanceof Rectangle rectangle
+                && topLeft.equals(rectangle.getTopLeft())
+                && bottomRight.equals(rectangle.getBottomRight());
     }
 
     @Override

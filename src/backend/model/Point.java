@@ -1,6 +1,7 @@
 package backend.model;
 
 public class Point {
+
     private double x, y;
 
     public Point(double x, double y) {
@@ -40,4 +41,5 @@ public class Point {
                 && x == point.getX()
                 && y == point.getY();
     }
+
 }

@@ -2,8 +2,8 @@ package backend.model;
 
 public class Ellipse extends Figure {
 
-    protected Point centerPoint;
-    protected double sMayorAxis, sMinorAxis;
+    private Point centerPoint;
+    private double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
         this.centerPoint = centerPoint;
@@ -11,24 +11,7 @@ public class Ellipse extends Figure {
         this.sMinorAxis = sMinorAxis;
     }
 
-    @Override
-    public Ellipse divideFigure() {
-        double newSMinorAxis = sMinorAxis / 2;
-        double newSMayorAxis = sMayorAxis / 2;
-        double newCenterX = centerPoint.getX();
-        double newCenterY = centerPoint.getY();
-
-
-        // Se actualizan las figuras
-        this.centerPoint = new Point(newCenterX-newSMayorAxis/2, newCenterY);
-        this.sMinorAxis = newSMinorAxis;
-        this.sMayorAxis = newSMayorAxis;
-
-        // Se retorna la nuevas figuras
-        return new Ellipse(new Point(newCenterX+newSMayorAxis/2, newCenterY), newSMayorAxis, newSMinorAxis);
-    }
-
-    // Cálculos de propiedades de las figuras
+    /* -------------------------------- Calculos de propiedades de las figuras ------------------------------ */
     @Override
     public double width(){
         return centerPoint.getX() - (sMayorAxis / 2);
@@ -39,7 +22,7 @@ public class Ellipse extends Figure {
         return centerPoint.getY() - (sMinorAxis / 2);
     }
 
-    // Getters
+    /* -----------------------------------------  Getters -------------------------------------------------- */
     public Point getCenterPoint() {
         return centerPoint;
     }
@@ -52,6 +35,8 @@ public class Ellipse extends Figure {
         return sMinorAxis;
     }
 
+    /* -------------------------------- Implementacion de las funcionalidades ----------------------------- */
+
     @Override
     public boolean found(Point eventPoint){
          return ((Math.pow(eventPoint.getX() - centerPoint.getX(), 2) / Math.pow(sMayorAxis, 2)) +
@@ -63,7 +48,6 @@ public class Ellipse extends Figure {
         centerPoint.move(diffX, diffY);
     }
 
-    // Métodos para voltear las figuras
     @Override
     public void turnRight() {
         double aux = sMayorAxis;
@@ -80,6 +64,24 @@ public class Ellipse extends Figure {
     public void turnVertical(){
         centerPoint.setY(centerPoint.getY() + sMinorAxis);
     }
+
+    @Override
+    public Ellipse divideFigure() {
+        double newSMinorAxis = sMinorAxis / 2;
+        double newSMayorAxis = sMayorAxis / 2;
+        double newCenterX = centerPoint.getX();
+        double newCenterY = centerPoint.getY();
+
+        // Se actualizan las figuras
+        this.centerPoint = new Point(newCenterX-newSMayorAxis/2, newCenterY);
+        this.sMinorAxis = newSMinorAxis;
+        this.sMayorAxis = newSMayorAxis;
+
+        // Se retorna la nuevas figuras
+        return new Ellipse(new Point(newCenterX+newSMayorAxis/2, newCenterY), newSMayorAxis, newSMinorAxis);
+    }
+
+    /* --------------------------------------------------------------------------------------------------------- */
 
     @Override
     public boolean equals(Object o){

@@ -12,9 +12,10 @@ public class DrawRectangle extends DrawFigure {
 
     private final Rectangle rectangle;
 
-    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer){
+    public DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc,
+                         ShadowType shadowType, boolean isBeveled, Layer layer){
         super(primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
-        figure = new Rectangle(topLeft, bottomRight);
+        setFigure(new Rectangle(topLeft, bottomRight));
         rectangle = (Rectangle) getFigure();
     }
 
@@ -34,9 +35,9 @@ public class DrawRectangle extends DrawFigure {
                 getRectangle().width(), getRectangle().height());
 
         if(selected(selectedFigure)) {
-            gc.setStroke(Color.RED);
+            getGc().setStroke(Color.RED);
         } else {
-            gc.setStroke(lineColor);
+            getGc().setStroke(lineColor);
         }
 
         getGc().strokeRect(getRectangle().getTopLeft().getX(), getRectangle().getTopLeft().getY(),
@@ -49,7 +50,8 @@ public class DrawRectangle extends DrawFigure {
         if (shadowColor != Color.TRANSPARENT) {
             getGc().setFill(shadowColor);
             double offset = getOffset();
-            getGc().fillRect(getRectangle().getTopLeft().getX() + offset, getRectangle().getTopLeft().getY() + offset, getRectangle().width(), getRectangle().height());
+            getGc().fillRect(getRectangle().getTopLeft().getX() + offset, getRectangle().getTopLeft().getY() +
+                    offset, getRectangle().width(), getRectangle().height());
         }
     }
 
@@ -69,7 +71,7 @@ public class DrawRectangle extends DrawFigure {
             getGc().setStroke(Color.BLACK);
             getGc().strokeLine(x + width, y, x + width, y + height);
             getGc().strokeLine(x, y + height, x + width, y + height);
-            gc.setLineWidth(1);
+            getGc().setLineWidth(1);
         }
     }
 
@@ -91,7 +93,8 @@ public class DrawRectangle extends DrawFigure {
     @Override
     public DrawRectangle divide(){
         Rectangle temp = getRectangle().divideFigure();
-        return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
+        return new DrawRectangle(temp.getTopLeft(), temp.getBottomRight(), getFillColor(), getGradientColor(), getGc(),
+                getShadowType(), isBeveled(), getLayer());
     }
 
     @Override
@@ -100,7 +103,8 @@ public class DrawRectangle extends DrawFigure {
         Point duplicatedBottomRight = new Point(getRectangle().getBottomRight().getX(), getRectangle().getBottomRight().getY());
         duplicatedTopLeft.move(offset, offset);
         duplicatedBottomRight.move(offset, offset);
-        return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), gc, getShadowType(), isBeveled(), getLayer());
+        return new DrawRectangle(duplicatedTopLeft, duplicatedBottomRight, getFillColor(), getGradientColor(), getGc(),
+                getShadowType(), isBeveled(), getLayer());
     }
 
 }

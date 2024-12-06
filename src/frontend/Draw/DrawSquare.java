@@ -15,9 +15,8 @@ public class DrawSquare extends DrawRectangle {
 
     public DrawSquare(Point topLeft, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, double size, boolean isBeveled, Layer layer) {
         super(topLeft, new Point(topLeft.getX()+ size, topLeft.getY() + size), primaryColor, secondaryColor, gc, shadowType, isBeveled, layer);
-        figure = new Square(topLeft, size);
+        setFigure (new Square(topLeft, size));
         square = (Square)getFigure();
-
     }
 
     public Rectangle getRectangle(){

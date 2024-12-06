@@ -35,7 +35,7 @@ public class PaintPane extends BorderPane {
 
 	/* ------------------------------------- Botones -------------------------------------------- */
 
-	// Botones Barra Izquierda
+	/* Botones barra izquierda */
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
 	private final ToggleButton circleButton = new ToggleButton("Círculo");
@@ -43,29 +43,29 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
 	private final ToggleButton deleteButton = new ToggleButton("Borrar");
 
-	// Botones para las sombras
+	/* Botones para las sombras */
 	private final ChoiceBox<ShadowType> shadowTypeChoiceBox = new ChoiceBox<>();
 
-	// Botón checkbox biselado
+	/* Boton checkbox biselado */
 	private final CheckBox beveledCheckBox = new CheckBox("Biselado");
 
-	// Botón selector de color de relleno
+	/* Boton selector de color de relleno */
 	private final ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
 
-	//Botón selector de color de gradiente
+	/* Boton selector de color de gradiente */
 	private final ColorPicker gradientColorPicker = new ColorPicker(defaultGradientColor);
 
-	// Botón copiar formato
+	/* Boton copiar formato */
 	private final ToggleButton copyFormatButton = new ToggleButton("Copiar fmt");
 
-	//Botones Barra Derecha
+	/* Botones barra derecha */
 	private final ToggleButton turnRightButton = new ToggleButton("Girar D");
 	private final ToggleButton turnHorizontalButton = new ToggleButton("Voltear H");
 	private final ToggleButton turnVerticalButton = new ToggleButton("Voltear V");
 	private final ToggleButton duplicateButton = new ToggleButton("Duplicar");
 	private final ToggleButton divideButton = new ToggleButton("Dividir");
 
-	// Botones Barra Superior
+	/* Botones barra superior */
 	private final ToggleButton frontButton = new ToggleButton("Traer al frente");
 	private final ToggleButton backButton = new ToggleButton("Enviar al fondo");
 	private final ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
@@ -76,19 +76,19 @@ public class PaintPane extends BorderPane {
 
 	/* ------------------------------------ Dibujo de figuras -------------------------------------- */
 
-	// Dibujar una figura
+	/* Dibujar una figura */
 	private Point startPoint;
 
-	// Seleccionar una figura
+	/* Seleccionar una figura */
 	private DrawFigure selectedFigure;
 
-	// StatusBar
+	/* StatusBar */
 	private final StatusPane statusPane;
 
-	// Lista de DrawFigures
+	/* Lista de DrawFigures */
 	private final List<DrawFigure> drawFigures = new LinkedList<>();
 
-	// Mapas de Layers-Drawfigures
+	/* Mapas de Layers-Drawfigures */
 	private final Map<Layer, List<DrawFigure>> layersMap = new LinkedHashMap<>();
 	
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
@@ -98,7 +98,7 @@ public class PaintPane extends BorderPane {
 
 		/* ------------------------------------- Inicializar botones -----------------------------------*/
 
-		// Inicializar botones de la izquierda
+		/* Inicializar botones de la izquierda */
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton,
 				deleteButton};
 		ToggleGroup tools = new ToggleGroup();
@@ -109,26 +109,26 @@ public class PaintPane extends BorderPane {
 		}
 		setFigureButtons();
 
-		// Inicializar shadowbox
+		/* Inicializar shadowbox */
 		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
 		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
 		shadowTypeChoiceBox.setPrefWidth(90);
 		shadowTypeChoiceBox.setCursor(Cursor.HAND);
 
-		// Inicializar biselado
+		/* Inicializar biselado */
 		beveledCheckBox.setPrefWidth(90);
 		beveledCheckBox.setSelected(false);
 		beveledCheckBox.setCursor(Cursor.HAND);
 
-		// Color pickers
+		/* Color pickers */
 		fillColorPicker.setCursor(Cursor.HAND);
 		gradientColorPicker.setCursor(Cursor.HAND);
 
-		// Inicializa botón para copiar el formato
+		/* Inicializa botón para copiar el formato */
 		copyFormatButton.setMinWidth(90);
 		copyFormatButton.setCursor(Cursor.HAND);
 
-		//Inicializa botones de la barra derecha
+		/* Inicializa botones de la barra derecha */
 		ToggleButton[] actionsArr = {turnRightButton, turnHorizontalButton, turnVerticalButton, duplicateButton, divideButton};
 		ToggleGroup actions = new ToggleGroup();
 		for(ToggleButton action : actionsArr){
@@ -137,7 +137,7 @@ public class PaintPane extends BorderPane {
 			action.setCursor(Cursor.HAND);
 		}
 
-		//Inicializa botones de la barra superior
+		/* Inicializa botones de la barra superior */
 		ToggleButton[] layersArr = {frontButton, backButton, addLayerButton, removeLayerButton};
 		ToggleGroup layers = new ToggleGroup();
 		for(ToggleButton layerButton : layersArr){
@@ -146,7 +146,7 @@ public class PaintPane extends BorderPane {
 			layerButton.setCursor(Cursor.HAND);
 		}
 
-		// Inicializar choiceBox capas
+		/* Inicializar choiceBox capas */
 		for(int i = 1 ; i < 4 ; i++) {
 			layersMap.put(new Layer("Capa " + i, i), new LinkedList<>());
 		}
@@ -155,7 +155,7 @@ public class PaintPane extends BorderPane {
 		layerChoiceBox.setMinWidth(90);
 		layerChoiceBox.setCursor(Cursor.HAND);
 
-		// Inicializar botones mostrar y ocultar capas
+		/* Inicializar botones mostrar y ocultar capas */
 		ToggleGroup showHide = new ToggleGroup();
 		showLayerButton.setToggleGroup(showHide);
 		showLayerButton.setCursor(Cursor.HAND);
@@ -163,39 +163,39 @@ public class PaintPane extends BorderPane {
 		showLayerButton.setCursor(Cursor.HAND);
 		showHide.selectToggle(showLayerButton);
 
-		// Se crea un VBox para los botones de la barra izquierda
+		/* Se crea un VBox para los botones de la barra izquierda */
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(new Label("Formato"));
 		buttonsBox.getChildren().addAll(shadowTypeChoiceBox, beveledCheckBox, fillColorPicker,
 				gradientColorPicker, copyFormatButton);
 
-		// Formato de la VBox izquierda
+		/* Formato de la VBox izquierda */
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		// Se crea un Vbox para los botones de la barra derecha
+		/* Se crea un Vbox para los botones de la barra derecha */
 		VBox leftButtonsBox = new VBox(10);
 		leftButtonsBox.getChildren().add(new Label("Acciones:"));
 		leftButtonsBox.getChildren().addAll(turnRightButton, turnHorizontalButton, turnVerticalButton,
 				duplicateButton, divideButton);
 
-		// Formato de la VBox derecha
+		/* Formato de la VBox derecha */
 		leftButtonsBox.setPadding(new Insets(5));
 		leftButtonsBox.setStyle("-fx-background-color: #999");
 		leftButtonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		// Se crea un HBox para los botones de la barra superior
+		/* Se crea un HBox para los botones de la barra superior */
 		HBox topButtonsBox = new HBox(10);
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
 		topButtonsBox.getChildren().addAll(layerChoiceBox);
 		topButtonsBox.getChildren().addAll(showLayerButton, hideLayerButton, addLayerButton, removeLayerButton);
 
-		//Formato de la HBox superior
+		/* Formato de la HBox superior */
 		setTop(topButtonsBox);
 		topButtonsBox.setAlignment(Pos.CENTER_LEFT);
 		topButtonsBox.setPadding(new Insets(5));

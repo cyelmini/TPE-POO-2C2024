@@ -9,26 +9,26 @@ public class Circle extends Ellipse {
         this.radius = radius;
     }
 
-    public double getRadius() {
-        return getsMayorAxis()/2;
+    public double getRadius(){
+        return radius;
     }
 
     @Override
     public boolean found(Point eventPoint){
         return Math.sqrt(Math.pow(getCenterPoint().getX() - eventPoint.getX(), 2) +
-                Math.pow(getCenterPoint().getY() - eventPoint.getY(), 2)) < getRadius();
+                Math.pow(getCenterPoint().getY() - eventPoint.getY(), 2)) < radius;
     }
 
     @Override
     public boolean equals(Object o){
         return o instanceof Circle circle &&
                 getCenterPoint().equals(circle.getCenterPoint())
-                && getRadius() == circle.getRadius();
+                && radius== circle.getRadius();
     }
 
     @Override
     public String toString() {
-        return String.format("Círculo [Centro: %s, Radio: %.2f]", centerPoint, getRadius());
+        return String.format("Círculo [Centro: %s, Radio: %.2f]", getCenterPoint(), radius);
     }
 
 }

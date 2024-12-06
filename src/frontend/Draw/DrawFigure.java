@@ -9,14 +9,15 @@ import javafx.scene.paint.*;
 
 public abstract class DrawFigure {
 
-    protected GraphicsContext gc;
-    protected Figure figure;
+    private final GraphicsContext gc;
+    private Figure figure;
     private Color primaryColor, secondaryColor;
     private ShadowType shadowType;
     private boolean isBeveled;
     private final Layer layer;
 
-    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer){
+    public DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType,
+                      boolean isBeveled, Layer layer){
         this.gc = gc;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
@@ -25,14 +26,15 @@ public abstract class DrawFigure {
         this.layer = layer;
     }
 
-    // Metodos de dibujo
+    /* ------------------------------------------ Dibujo de figuras ------------------------------------------- */
+
     public abstract void draw(Figure selectedFigure, Color lineColor);
 
     public abstract void drawShadow();
 
     public abstract void drawBeveled();
 
-    //Getters
+    /* ---------------------------------------------- Getters ------------------------------------------------- */
     public GraphicsContext getGc(){
         return gc;
     }
@@ -65,7 +67,12 @@ public abstract class DrawFigure {
         return layer;
     }
 
-    // Setters
+    /* ----------------------------------------------  Setters --------------------------------------------- */
+
+    public void setFigure(Figure figure){
+        this.figure = figure;
+    }
+
     public void setPrimaryColor(Color color){
         this.primaryColor = color;
     }
@@ -103,7 +110,8 @@ public abstract class DrawFigure {
         isBeveled = selected;
     }
 
-    // Metodo que devuelve true si la figura dada es la figura de la drawFigure
+    /* -------------------------------- Implementacion de las funcionalidades ------------------------------- */
+
     public boolean selected(Figure selectedFigure) {
         return figure.equals(selectedFigure);
     }
@@ -112,24 +120,20 @@ public abstract class DrawFigure {
         return isBeveled;
     }
 
-    // Metodo que devuelve true si un determinado punto está dentro de una figura
     public boolean found(Point eventPoint) {
         return figure.found(eventPoint);
     }
 
-    // Metodo para mover la figura
     public void move(double diffX, double diffY){
         figure.move(diffX, diffY);
     }
 
-    // Metodo que recibe un drawFigure y copia su formato
     public void format(DrawFigure figure) {
         setColors(figure.getFillColor(), figure.getGradientColor());
         setShadowType(figure.getShadowType());
         setBeveled(figure.isBeveled());
     }
 
-    // Métodos para voltear figuras
     public abstract void turnRight();
 
     public abstract void turnHorizontal();
@@ -140,7 +144,8 @@ public abstract class DrawFigure {
 
     public abstract DrawFigure divide();
 
-    // To string
+    /* -------------------------------------------------------------------------------------------------- */
+
     public String toString(){
         return figure.toString();
     }
