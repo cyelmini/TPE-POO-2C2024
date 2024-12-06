@@ -23,7 +23,7 @@ import java.util.*;
 public class PaintPane extends BorderPane {
 
 	/* ------------------------------------- BackEnd --------------------------------------------- */
-	private final CanvasState canvasState;
+	private final CanvasState<DrawFigure> canvasState;
 
 	/* --------------------------------- Canvas y relacionados ---------------------------------- */
 	private final Canvas canvas = new Canvas(800, 600);
@@ -85,14 +85,10 @@ public class PaintPane extends BorderPane {
 	/* StatusBar */
 	private final StatusPane statusPane;
 
-	/* Lista de DrawFigures */
-	private final List<DrawFigure> drawFigures = new LinkedList<>();
-
 	/* Mapas de Layers-Drawfigures */
 	private final Map<Layer, List<DrawFigure>> layersMap = new LinkedHashMap<>();
 	
-	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
-
+	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
@@ -238,10 +234,9 @@ public class PaintPane extends BorderPane {
 			newFigure = button.getDrawFigure(startPoint, endPoint, fillColorPicker.getValue(),
 					gradientColorPicker.getValue(), gc, shadowTypeChoiceBox.getValue(), beveledCheckBox.isSelected(),
 					layerChoiceBox.getValue());
-			drawFigures.add(newFigure);
+			canvasState.add(newFigure);
 			layersMap.putIfAbsent(layerChoiceBox.getValue(), new LinkedList<>());
 			layersMap.get(layerChoiceBox.getValue()).add(newFigure);
-			canvasState.add(newFigure.getFigure());
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -250,7 +245,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(DrawFigure drawFigure : drawFigures) {
+			for(DrawFigure drawFigure : canvasState) {
 				if(drawFigure.found(eventPoint)) {
 					found = true;
 					label.append(drawFigure);
@@ -268,7 +263,7 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for(DrawFigure drawFigure : drawFigures) {
+				for(DrawFigure drawFigure : canvasState) {
 					if(drawFigure.found(eventPoint)) {
 						if(selectedFigure != null && copyFormatButton.isSelected()){
 							drawFigure.format(selectedFigure);
@@ -301,7 +296,7 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 
-				if(selectedFigure != null && canvasState.contains(selectedFigure.getFigure())) {
+				if(selectedFigure != null && canvasState.contains(selectedFigure)) {
 					selectedFigure.move(diffX, diffY);
 				}
 				redrawCanvas();
@@ -309,8 +304,8 @@ public class PaintPane extends BorderPane {
 		});
 
 		deleteButton.setOnAction(event -> {
-			if(selectedFigure != null && canvasState.contains(selectedFigure.getFigure())) {
-				drawFigures.remove(selectedFigure);
+			if(selectedFigure != null && canvasState.contains(selectedFigure)) {
+				canvasState.remove(selectedFigure);
 				canvasState.remove(selectedFigure.getFigure());
 				layersMap.get(selectedFigure.getLayer()).remove(selectedFigure);
 				selectedFigure = null;
@@ -370,8 +365,7 @@ public class PaintPane extends BorderPane {
 		duplicateButton.setOnAction(event -> {
 			if(selectedFigure != null) {
 				DrawFigure newFigure = selectedFigure.duplicate(duplicateOffset);
-				drawFigures.add(newFigure);
-				canvasState.add(newFigure.getFigure());
+				canvasState.add(newFigure);
 				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
 			}
@@ -380,8 +374,7 @@ public class PaintPane extends BorderPane {
 		divideButton.setOnAction(event -> {
 			if(selectedFigure != null) {
 				DrawFigure newFigure = selectedFigure.divide();
-				drawFigures.add(newFigure);
-				canvasState.add(newFigure.getFigure());
+				canvasState.add(newFigure);
 				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
 			}
