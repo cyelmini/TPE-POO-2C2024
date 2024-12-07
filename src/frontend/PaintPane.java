@@ -349,7 +349,7 @@ public class PaintPane extends BorderPane {
 
 		hideLayerButton.setOnAction(event -> {
 			layerChoiceBox.getValue().setVisible(false);
-			if(selectedFigure.getLayer().getNumber() == layerChoiceBox.getValue().getNumber()){
+			if(selectedFigure != null && selectedFigure.getLayer().getNumber() == layerChoiceBox.getValue().getNumber()){
 				selectedFigure = null;
 			}
 			redrawCanvas();
@@ -359,6 +359,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				layersMap.get(layerChoiceBox.getValue()).remove(selectedFigure);
 				layersMap.get(layerChoiceBox.getValue()).add(selectedFigure);
+				canvasState.remove(selectedFigure);
+				canvasState.add(selectedFigure);
 				redrawCanvas();
 			}
 		});
@@ -367,6 +369,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				layersMap.get(layerChoiceBox.getValue()).remove(selectedFigure);
 				layersMap.get(layerChoiceBox.getValue()).addFirst(selectedFigure);
+				canvasState.remove(selectedFigure);
+				canvasState.addFirst(selectedFigure);
 				redrawCanvas();
 			}
 		});
