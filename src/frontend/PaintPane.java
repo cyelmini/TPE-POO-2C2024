@@ -64,7 +64,6 @@ public class PaintPane extends BorderPane {
 	private final Map<Layer, List<DrawFigure>> layersMap = new LinkedHashMap<>();
 	
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
-        /* ------------------------------------- BackEnd --------------------------------------------- */
 
         /* ------------------------------------- Inicializar botones -----------------------------------*/
 
@@ -98,18 +97,18 @@ public class PaintPane extends BorderPane {
 		initializeButtons(copyFormatButton);
 
 		/* Inicializa botones de la barra derecha, barra superior */
-        /* Botones barra derecha */
         Button turnRightButton = new Button("Girar D");
         Button turnHorizontalButton = new Button("Voltear H");
         Button turnVerticalButton = new Button("Voltear V");
         Button duplicateButton = new Button("Duplicar");
         Button divideButton = new Button("Dividir");
-        /* Botones barra superior */
+
         Button frontButton = new Button("Traer al frente");
         Button backButton = new Button("Enviar al fondo");
         Button addLayerButton = new Button("Agregar capa");
         Button removeLayerButton = new Button("Eliminar capa");
-        Button[] buttons = {turnRightButton, turnHorizontalButton, turnVerticalButton,
+
+		Button[] buttons = {turnRightButton, turnHorizontalButton, turnVerticalButton,
                 duplicateButton, divideButton, frontButton, backButton, addLayerButton, removeLayerButton};
 		for(Button button : buttons){
 			initializeButtons(button);
@@ -176,11 +175,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 
-			if(startPoint == null) {
-				return ;
-			}
-
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			if(startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())) {
 				return ;
 			}
 
