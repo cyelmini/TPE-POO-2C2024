@@ -65,7 +65,7 @@ public class PaintPane extends BorderPane {
 	
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
 
-        /* ------------------------------------- Inicializar botones -----------------------------------*/
+        /* ----------------------------------- Inicializar botones -----------------------------------*/
 
 		/* Inicializar botones de la izquierda */
         ToggleButton deleteButton = new ToggleButton("Borrar");
@@ -225,21 +225,23 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for(DrawFigure drawFigure : canvasState.reversed()) {
-					if(drawFigure.found(eventPoint) && drawFigure.getLayer().isVisible()) {
-						if(selectedFigure != null && copyFormatButton.isSelected()){
-							drawFigure.format(selectedFigure);
-							copyFormatButton.setSelected(false);
-						} else {
-							selectedFigure = drawFigure;
-							fillColorPicker.setValue(drawFigure.getFillColor());
-							gradientColorPicker.setValue(drawFigure.getGradientColor());
-							shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
-							beveledCheckBox.setSelected(drawFigure.isBeveled());
-							layerChoiceBox.setValue(drawFigure.getLayer());
-							label.append(drawFigure);
-							found = true;
-							break;
+				for(Layer layer : layersMap.keySet()){
+					for(DrawFigure drawFigure : layersMap.get(layer).reversed()) {
+						if (drawFigure.found(eventPoint) && drawFigure.getLayer().isVisible()) {
+							if (selectedFigure != null && copyFormatButton.isSelected()) {
+								drawFigure.format(selectedFigure);
+								copyFormatButton.setSelected(false);
+							} else {
+								selectedFigure = drawFigure;
+								fillColorPicker.setValue(drawFigure.getFillColor());
+								gradientColorPicker.setValue(drawFigure.getGradientColor());
+								shadowTypeChoiceBox.setValue(drawFigure.getShadowType());
+								beveledCheckBox.setSelected(drawFigure.isBeveled());
+								layerChoiceBox.setValue(drawFigure.getLayer());
+								label.append(drawFigure);
+								found = true;
+								break;
+							}
 						}
 					}
 				}

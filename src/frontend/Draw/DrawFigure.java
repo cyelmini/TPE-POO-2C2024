@@ -146,6 +146,7 @@ public abstract class DrawFigure {
 
     /* -------------------------------------------------------------------------------------------------- */
 
+    @Override
     public String toString(){
         return figure.toString();
     }
