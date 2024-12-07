@@ -9,12 +9,8 @@ import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.Priority;
 import javafx.geometry.Pos;
 
 
@@ -25,7 +21,7 @@ public class PaintPane extends BorderPane {
 	/* ------------------------------------- BackEnd --------------------------------------------- */
 	private final CanvasState<DrawFigure> canvasState;
 
-	/* --------------------------------- Canvas y relacionados ---------------------------------- */
+	/* --------------------------------- Canvas y relacionados ----------------------------------- */
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private final Color lineColor = Color.BLACK;
@@ -59,20 +55,20 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton copyFormatButton = new ToggleButton("Copiar fmt");
 
 	/* Botones barra derecha */
-	private final ToggleButton turnRightButton = new ToggleButton("Girar D");
-	private final ToggleButton turnHorizontalButton = new ToggleButton("Voltear H");
-	private final ToggleButton turnVerticalButton = new ToggleButton("Voltear V");
-	private final ToggleButton duplicateButton = new ToggleButton("Duplicar");
-	private final ToggleButton divideButton = new ToggleButton("Dividir");
+	private final Button turnRightButton = new Button("Girar D");
+	private final Button turnHorizontalButton = new Button("Voltear H");
+	private final Button turnVerticalButton = new Button("Voltear V");
+	private final Button duplicateButton = new Button("Duplicar");
+	private final Button divideButton = new Button("Dividir");
 
 	/* Botones barra superior */
-	private final ToggleButton frontButton = new ToggleButton("Traer al frente");
-	private final ToggleButton backButton = new ToggleButton("Enviar al fondo");
+	private final Button frontButton = new Button("Traer al frente");
+	private final Button backButton = new Button("Enviar al fondo");
 	private final ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
 	private final RadioButton showLayerButton = new RadioButton("Mostrar");
 	private final RadioButton hideLayerButton = new RadioButton("Ocultar");
-	private final ToggleButton addLayerButton = new ToggleButton("Agregar capa");
-	private final ToggleButton removeLayerButton = new ToggleButton("Eliminar capa");
+	private final Button addLayerButton = new Button("Agregar capa");
+	private final Button removeLayerButton = new Button("Eliminar capa");
 
 	/* ------------------------------------ Dibujo de figuras -------------------------------------- */
 
@@ -99,21 +95,20 @@ public class PaintPane extends BorderPane {
 				deleteButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
-			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
-			tool.setCursor(Cursor.HAND);
+			initializeButtons(tool);
 		}
 		setFigureButtons();
 
 		/* Inicializar shadowbox */
 		shadowTypeChoiceBox.getItems().addAll(ShadowType.values());
-		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW); // Valor predeterminado
+		shadowTypeChoiceBox.setValue(ShadowType.NO_SHADOW);
 		shadowTypeChoiceBox.setPrefWidth(90);
 		shadowTypeChoiceBox.setCursor(Cursor.HAND);
 
 		/* Inicializar biselado */
-		beveledCheckBox.setPrefWidth(90);
 		beveledCheckBox.setSelected(false);
+		beveledCheckBox.setPrefWidth(90);
 		beveledCheckBox.setCursor(Cursor.HAND);
 
 		/* Color pickers */
@@ -121,25 +116,13 @@ public class PaintPane extends BorderPane {
 		gradientColorPicker.setCursor(Cursor.HAND);
 
 		/* Inicializa botón para copiar el formato */
-		copyFormatButton.setMinWidth(90);
-		copyFormatButton.setCursor(Cursor.HAND);
+		initializeButtons(copyFormatButton);
 
-		/* Inicializa botones de la barra derecha */
-		ToggleButton[] actionsArr = {turnRightButton, turnHorizontalButton, turnVerticalButton, duplicateButton, divideButton};
-		ToggleGroup actions = new ToggleGroup();
-		for(ToggleButton action : actionsArr){
-			action.setMinWidth(90);
-			action.setToggleGroup(actions);
-			action.setCursor(Cursor.HAND);
-		}
-
-		/* Inicializa botones de la barra superior */
-		ToggleButton[] layersArr = {frontButton, backButton, addLayerButton, removeLayerButton};
-		ToggleGroup layers = new ToggleGroup();
-		for(ToggleButton layerButton : layersArr){
-			layerButton.setMinWidth(90);
-			layerButton.setToggleGroup(layers);
-			layerButton.setCursor(Cursor.HAND);
+		/* Inicializa botones de la barra derecha, barra superior */
+		Button[] buttons = {turnRightButton, turnHorizontalButton, turnVerticalButton,
+				duplicateButton, divideButton, frontButton, backButton, addLayerButton, removeLayerButton};
+		for(Button button : buttons){
+			initializeButtons(button);
 		}
 
 		/* Inicializar choiceBox capas */
@@ -152,12 +135,10 @@ public class PaintPane extends BorderPane {
 		layerChoiceBox.setCursor(Cursor.HAND);
 
 		/* Inicializar botones mostrar y ocultar capas */
-		ToggleGroup showHide = new ToggleGroup();
-		showLayerButton.setToggleGroup(showHide);
 		showLayerButton.setCursor(Cursor.HAND);
-		hideLayerButton.setToggleGroup(showHide);
 		showLayerButton.setCursor(Cursor.HAND);
-		showHide.selectToggle(showLayerButton);
+
+		gc.setLineWidth(1);
 
 		/* Se crea un VBox para los botones de la barra izquierda */
 		VBox buttonsBox = new VBox(10);
@@ -167,10 +148,7 @@ public class PaintPane extends BorderPane {
 				gradientColorPicker, copyFormatButton);
 
 		/* Formato de la VBox izquierda */
-		buttonsBox.setPadding(new Insets(5));
-		buttonsBox.setStyle("-fx-background-color: #999");
-		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+		initializeBox(buttonsBox);
 
 		/* Se crea un Vbox para los botones de la barra derecha */
 		VBox leftButtonsBox = new VBox(10);
@@ -179,10 +157,7 @@ public class PaintPane extends BorderPane {
 				duplicateButton, divideButton);
 
 		/* Formato de la VBox derecha */
-		leftButtonsBox.setPadding(new Insets(5));
-		leftButtonsBox.setStyle("-fx-background-color: #999");
-		leftButtonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+		initializeBox(leftButtonsBox);
 
 		/* Se crea un HBox para los botones de la barra superior */
 		HBox topButtonsBox = new HBox(10);
@@ -194,10 +169,7 @@ public class PaintPane extends BorderPane {
 		/* Formato de la HBox superior */
 		setTop(topButtonsBox);
 		topButtonsBox.setAlignment(Pos.CENTER_LEFT);
-		topButtonsBox.setPadding(new Insets(5));
-		topButtonsBox.setStyle("-fx-background-color: #999");
-		topButtonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+		initializeBox(topButtonsBox);
 
 		Region leftSpacer = new Region();
 		Region rightSpacer = new Region();
@@ -451,12 +423,26 @@ public class PaintPane extends BorderPane {
 
 	/* ----------------------------------------- Funciones auxiliares -----------------------------------------*/
 
-	// Inicializar los valores de los botones
+	/* Inicializar los valores de los botones para cada figura */
 	private void setFigureButtons(){
 		circleButton.setUserData(new CircleButton());
 		ellipseButton.setUserData(new EllipseButton());
 		rectangleButton.setUserData(new RectangleButton());
 		squareButton.setUserData(new SquareButton());
+	}
+
+	/* Inicializar botones */
+	public void initializeButtons(ButtonBase button){
+		button.setMinWidth(90);
+		button.setCursor(Cursor.HAND);
+	}
+
+	/* Inicializar box */
+	public void initializeBox(Pane box){
+		box.setPadding(new Insets(5));
+		box.setStyle("-fx-background-color: #999");
+		box.setPrefWidth(100);
+		gc.setLineWidth(1);
 	}
 
 }
