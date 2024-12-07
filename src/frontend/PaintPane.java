@@ -125,8 +125,14 @@ public class PaintPane extends BorderPane {
 
 		/* Inicializar botones mostrar y ocultar capas */
         RadioButton showLayerButton = new RadioButton("Mostrar");
-        showLayerButton.setCursor(Cursor.HAND);
-		showLayerButton.setCursor(Cursor.HAND);
+		showLayerButton.setSelected(true);
+		RadioButton hideLayerButton = new RadioButton("Ocultar");
+		RadioButton[] showHideArr = {showLayerButton, hideLayerButton};
+		ToggleGroup showHide = new ToggleGroup();
+		for(RadioButton radioButton : showHideArr){
+			radioButton.setToggleGroup(showHide);
+			radioButton.setCursor(Cursor.HAND);
+		}
 
 		gc.setLineWidth(1);
 
@@ -154,7 +160,6 @@ public class PaintPane extends BorderPane {
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
 		topButtonsBox.getChildren().addAll(layerChoiceBox);
-        RadioButton hideLayerButton = new RadioButton("Ocultar");
         topButtonsBox.getChildren().addAll(showLayerButton, hideLayerButton, addLayerButton, removeLayerButton);
 
 		/* Formato de la HBox superior */
