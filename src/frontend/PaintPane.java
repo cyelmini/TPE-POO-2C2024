@@ -18,10 +18,7 @@ import java.util.*;
 
 public class PaintPane extends BorderPane {
 
-	/* ------------------------------------- BackEnd --------------------------------------------- */
-	private final CanvasState<DrawFigure> canvasState;
-
-	/* --------------------------------- Canvas y relacionados ----------------------------------- */
+    /* --------------------------------- Canvas y relacionados ----------------------------------- */
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private final Color lineColor = Color.BLACK;
@@ -37,9 +34,8 @@ public class PaintPane extends BorderPane {
 	private final ToggleButton circleButton = new ToggleButton("Círculo");
 	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
 	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
-	private final ToggleButton deleteButton = new ToggleButton("Borrar");
 
-	/* Botones para las sombras */
+    /* Botones para las sombras */
 	private final ChoiceBox<ShadowType> shadowTypeChoiceBox = new ChoiceBox<>();
 
 	/* Boton checkbox biselado */
@@ -54,23 +50,9 @@ public class PaintPane extends BorderPane {
 	/* Boton copiar formato */
 	private final ToggleButton copyFormatButton = new ToggleButton("Copiar fmt");
 
-	/* Botones barra derecha */
-	private final Button turnRightButton = new Button("Girar D");
-	private final Button turnHorizontalButton = new Button("Voltear H");
-	private final Button turnVerticalButton = new Button("Voltear V");
-	private final Button duplicateButton = new Button("Duplicar");
-	private final Button divideButton = new Button("Dividir");
+    private final ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
 
-	/* Botones barra superior */
-	private final Button frontButton = new Button("Traer al frente");
-	private final Button backButton = new Button("Enviar al fondo");
-	private final ChoiceBox<Layer> layerChoiceBox = new ChoiceBox<>();
-	private final RadioButton showLayerButton = new RadioButton("Mostrar");
-	private final RadioButton hideLayerButton = new RadioButton("Ocultar");
-	private final Button addLayerButton = new Button("Agregar capa");
-	private final Button removeLayerButton = new Button("Eliminar capa");
-
-	/* ------------------------------------ Dibujo de figuras -------------------------------------- */
+    /* ------------------------------------ Dibujo de figuras -------------------------------------- */
 
 	/* Dibujar una figura */
 	private Point startPoint;
@@ -78,21 +60,18 @@ public class PaintPane extends BorderPane {
 	/* Seleccionar una figura */
 	private DrawFigure selectedFigure;
 
-	/* StatusBar */
-	private final StatusPane statusPane;
-
-	/* Mapas de Layers-Drawfigures */
+    /* Mapas de Layers-Drawfigures */
 	private final Map<Layer, List<DrawFigure>> layersMap = new LinkedHashMap<>();
 	
 	public PaintPane(CanvasState<DrawFigure> canvasState, StatusPane statusPane) {
-		this.canvasState = canvasState;
-		this.statusPane = statusPane;
+        /* ------------------------------------- BackEnd --------------------------------------------- */
 
-		/* ------------------------------------- Inicializar botones -----------------------------------*/
+        /* ------------------------------------- Inicializar botones -----------------------------------*/
 
 		/* Inicializar botones de la izquierda */
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton,
-				deleteButton};
+        ToggleButton deleteButton = new ToggleButton("Borrar");
+        ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton,
+                deleteButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setToggleGroup(tools);
@@ -119,8 +98,19 @@ public class PaintPane extends BorderPane {
 		initializeButtons(copyFormatButton);
 
 		/* Inicializa botones de la barra derecha, barra superior */
-		Button[] buttons = {turnRightButton, turnHorizontalButton, turnVerticalButton,
-				duplicateButton, divideButton, frontButton, backButton, addLayerButton, removeLayerButton};
+        /* Botones barra derecha */
+        Button turnRightButton = new Button("Girar D");
+        Button turnHorizontalButton = new Button("Voltear H");
+        Button turnVerticalButton = new Button("Voltear V");
+        Button duplicateButton = new Button("Duplicar");
+        Button divideButton = new Button("Dividir");
+        /* Botones barra superior */
+        Button frontButton = new Button("Traer al frente");
+        Button backButton = new Button("Enviar al fondo");
+        Button addLayerButton = new Button("Agregar capa");
+        Button removeLayerButton = new Button("Eliminar capa");
+        Button[] buttons = {turnRightButton, turnHorizontalButton, turnVerticalButton,
+                duplicateButton, divideButton, frontButton, backButton, addLayerButton, removeLayerButton};
 		for(Button button : buttons){
 			initializeButtons(button);
 		}
@@ -135,7 +125,8 @@ public class PaintPane extends BorderPane {
 		layerChoiceBox.setCursor(Cursor.HAND);
 
 		/* Inicializar botones mostrar y ocultar capas */
-		showLayerButton.setCursor(Cursor.HAND);
+        RadioButton showLayerButton = new RadioButton("Mostrar");
+        showLayerButton.setCursor(Cursor.HAND);
 		showLayerButton.setCursor(Cursor.HAND);
 
 		gc.setLineWidth(1);
@@ -154,7 +145,7 @@ public class PaintPane extends BorderPane {
 		VBox leftButtonsBox = new VBox(10);
 		leftButtonsBox.getChildren().add(new Label("Acciones:"));
 		leftButtonsBox.getChildren().addAll(turnRightButton, turnHorizontalButton, turnVerticalButton,
-				duplicateButton, divideButton);
+                duplicateButton, divideButton);
 
 		/* Formato de la VBox derecha */
 		initializeBox(leftButtonsBox);
@@ -164,7 +155,8 @@ public class PaintPane extends BorderPane {
 		topButtonsBox.getChildren().addAll(frontButton, backButton);
 		topButtonsBox.getChildren().add(new Label("Capas"));
 		topButtonsBox.getChildren().addAll(layerChoiceBox);
-		topButtonsBox.getChildren().addAll(showLayerButton, hideLayerButton, addLayerButton, removeLayerButton);
+        RadioButton hideLayerButton = new RadioButton("Ocultar");
+        topButtonsBox.getChildren().addAll(showLayerButton, hideLayerButton, addLayerButton, removeLayerButton);
 
 		/* Formato de la HBox superior */
 		setTop(topButtonsBox);
@@ -179,10 +171,7 @@ public class PaintPane extends BorderPane {
 		topButtonsBox.getChildren().add(rightSpacer);
 
 		/* --------------------------------------- Manejo de acciones ------------------------------------------- */
-
-		canvas.setOnMousePressed(event -> {
-			startPoint = new Point(event.getX(), event.getY());
-		});
+		canvas.setOnMousePressed(event -> startPoint = new Point(event.getX(), event.getY()));
 
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
@@ -195,7 +184,7 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 
-			DrawFigure newFigure = null;
+			DrawFigure newFigure;
 			Toggle selectedButton = tools.getSelectedToggle();
 
 			if(selectedButton == null || selectedButton.getUserData() == null || !layerChoiceBox.getValue().isVisible()) {

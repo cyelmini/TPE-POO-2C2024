@@ -1,9 +1,8 @@
 package frontend;
 
 public class Layer {
-    private String name;
-
-    private int number;
+    private final String name;
+    private final int number;
 
     private boolean visible = true;
      public Layer (String name, int number){
