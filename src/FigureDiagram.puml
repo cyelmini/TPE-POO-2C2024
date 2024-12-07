@@ -1,0 +1,56 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+ArrayList <|-- CanvasState
+class ArrayList<E>
+class CanvasState<E>
+
+Figure <|-- Rectangle
+Figure <|-- Ellipse
+Rectangle <|-- Square
+Ellipse <|-- Circle
+
+abstract class Figure{
++{abstract} double width()
++{abstract} double height()
++{abstract} boolean found(Point eventPoint)
++{abstract} void move(double diffX, double diffY)
++{abstract} turnRight()
++{abstract} turnHorizontal()
++{abstract} turnVertical()
++{abstract} divideFigure()
++{abstract} boolean equals(Object o)
+}
+
+class Rectangle{
+- Point topLeft, bottomRight
++ Rectangle(Point topLeft, Point bottomRight)
++ Point getTopLeft()
++ Point getBottomRight()
++boolean equals(Object o)
++String toString()
+}
+
+class Square{
+-double size
++Square(Point topLeft, double size)
++String toString()
+}
+
+class Ellipse{
+-Point centerPoint
+-double sMayorAxis, sMinorAxis
++Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis)
++Point getCenterPoint()
++double getsMayorAxis()
++double getsMinorAxis()
++String toString()
+}
+
+class Circle{
+-double radius
++Circle(Point centerPoint, double radius)
++double getRadius()
++String toString()
+}
+@enduml
