@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam groupInheritance 3
+together{
+interface Buttons
+
+Class CircleButton
+
+Class EllipseButton
+
+Class RectangleButton
+
+Class SquareButton
+}
+
+Buttons <|.. CircleButton
+Buttons <|.. SquareButton
+Buttons <|.. RectangleButton
+Buttons <|.. EllipseButton
+
+class Layer{
+-String name
+-int number
+-boolean visible
++Layer (String name, int number)
++boolean isVisible()
++void setVisible(boolean value)
++String toString()
++int getNumber()
+}
+
+enum ShadowType{
+NO_SHADOW
+SIMPLE
+COLOR
+SIMPLE_INVERSE
+COLOR_INVERSE
++getColor(Color color)
++double getOffset()
+}
+@enduml

@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+DrawFigure <|-- DrawRectangle
+DrawFigure <|-- DrawEllipse
+DrawRectangle <|-- DrawSquare
+DrawEllipse <|-- DrawCircle
+
+abstract class DrawFigure{
+- GraphicsContext gc
+- Figure figure
+- Color primaryColor, secondaryColor
+- ShadowType shadowType
+- boolean isBeleved
+- Layer layer
++ DrawFigure(Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType,
+ boolean isBeveled, Layer layer)
+.. Dibujo de figuras ..
++{abstract} void draw(Figure selectedFigure, Color lineColor)
++{abstract} void drawShadow()
++{abstract} void drawBeleved()
+.. Getters ..
++GraphicsContext getGc()
++Figure getFigure()
++Color getFillColor()
++Color getGradientColor()
++ShadowType getShadowType()
++Color getShadowColor()
++double getOffset()
+Layer getLayer()
+.. Setters ..
++void setFigure(Figure figure)
++void setPrimaryColor(Color color)
++void setSecondaryColor(Color color)
++void setColors(Color primaryColor, Color secondaryColor)
++void setGradientRad()
++void setGradientLinear()
++void setShadowType(ShadowType shadowType)
++void setBeveled(boolean selected)
+.. Implementacion de las funcionalides ..
++boolean selected(Figure selectedFigure)
++boolean isBeveled()
++boolean found(Point eventPoint)
++void move(double diffX, double diffY)
++void format(DrawFigure figure)
++{abstract}void turnRight()
++{abstract}void turnHorizontal()
++{abstract}void turnVertical()
++{abstract}DrawFigure duplicate(double offset)
++{abstract}DrawFigure divide()
+--
++String toString()
+}
+
+class DrawEllipse{
+-Ellipse ellipse
++DrawEllipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color primaryColor, Color secondaryColor,
+                        GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer)
++void draw(Figure selectedFigure, Color lineColor)
++void DrawShadow()
++void drawBeveled()
++void turnRight()
++void turnHorizontal()
++void turnVertical()
++DrawEllipse duplicate(double offset)
++DrawEllipse divide()
+}
+
+class DrawCircle{
++DrawCircle(Point centerPoint, double radius, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, boolean isBeveled, Layer layer)
+}
+
+class DrawRectangle{
+-Rectangle rectangle
++DrawRectangle(Point topLeft, Point bottomRight, Color primaryColor, Color secondaryColor, GraphicsContext gc,
+                          ShadowType shadowType, boolean isBeveled, Layer layer)
++Rectangle getRectangle()
++void draw(Figure selectedFigure, Color lineColor)
++void drawShadow()
++void drawBeveled()
++void turnRight()
++void turnHorizontal()
++void turnVertical()
++DrawRectangle divide()
+DrawRectangle duplicate(double offset)
+}
+
+class DrawSquare{
++DrawSquare(Point topLeft, Color primaryColor, Color secondaryColor, GraphicsContext gc, ShadowType shadowType, double size, boolean isBeveled, Layer layer)
++Rectangle getRectangle()
+}
+@enduml
