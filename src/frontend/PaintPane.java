@@ -377,6 +377,13 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		layerChoiceBox.setOnAction(event -> {
+			Layer selectedLayer = layerChoiceBox.getValue();
+			showLayerButton.setSelected(true);
+			selectedLayer.setVisible(true);
+			redrawCanvas();
+		});
+
 		addLayerButton.setOnAction(event ->{
 			Layer lastLayer = layerChoiceBox.getItems().getLast();
 			Layer newLayer = new Layer("Capa " + (lastLayer.getNumber() + 1), lastLayer.getNumber() + 1);
@@ -400,7 +407,7 @@ public class PaintPane extends BorderPane {
 		setCenter(canvas);
 	}
 
-	void redrawCanvas() {
+	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		for(Layer layer : layersMap.keySet()){
@@ -427,13 +434,13 @@ public class PaintPane extends BorderPane {
 	}
 
 	/* Inicializar botones */
-	public void initializeButtons(ButtonBase button){
+	private void initializeButtons(ButtonBase button){
 		button.setMinWidth(90);
 		button.setCursor(Cursor.HAND);
 	}
 
 	/* Inicializar box */
-	public void initializeBox(Pane box){
+	private void initializeBox(Pane box){
 		box.setPadding(new Insets(5));
 		box.setStyle("-fx-background-color: #999");
 		box.setPrefWidth(100);
