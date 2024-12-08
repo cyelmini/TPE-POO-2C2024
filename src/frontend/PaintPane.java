@@ -180,7 +180,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 
-			if(startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())) {
+			if(drawFigureButtonsSelected() && (startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()))) {
 				setErrorAlert("Error en el dibujo de figura", "Debe dibujar la figura arrastrando el mouse hacia " +
 						"abajo y hacia la derecha");
 				return;
@@ -436,6 +436,9 @@ public class PaintPane extends BorderPane {
 		setCenter(canvas);
 	}
 
+	/* ----------------------------------------- Funciones auxiliares -----------------------------------------*/
+
+	/* Redibujar el canvas */
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -451,8 +454,6 @@ public class PaintPane extends BorderPane {
 			}
 		}
 	}
-
-	/* ----------------------------------------- Funciones auxiliares -----------------------------------------*/
 
 	/* Inicializar los valores de los botones para cada figura */
 	private void setFigureButtons(){
@@ -485,4 +486,8 @@ public class PaintPane extends BorderPane {
 		alert.showAndWait();
 	}
 
+	/* Verificar si se seleccionó algún botón de figura */
+	private boolean drawFigureButtonsSelected() {
+		return rectangleButton.isSelected() || circleButton.isSelected() || squareButton.isSelected() || ellipseButton.isSelected();
+	}
 }
