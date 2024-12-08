@@ -181,13 +181,20 @@ public class PaintPane extends BorderPane {
 			Point endPoint = new Point(event.getX(), event.getY());
 
 			if(startPoint == null || (endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY())) {
-				return ;
+				setErrorAlert("Error en el dibujo de figura", "Debe dibujar la figura arrastrando el mouse hacia " +
+						"abajo y hacia la derecha");
+				return;
 			}
 
 			DrawFigure newFigure;
 			Toggle selectedButton = tools.getSelectedToggle();
 
-			if(selectedButton == null || selectedButton.getUserData() == null || !layerChoiceBox.getValue().isVisible()) {
+			if(selectedButton == null || selectedButton.getUserData() == null) {
+				return;
+			}
+
+			if(!layerChoiceBox.getValue().isVisible()){
+				setErrorAlert("La capa seleccionada está oculta", "Seleccione otra capa");
 				return;
 			}
 
@@ -305,10 +312,18 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		copyFormatButton.setOnAction(event -> {
+			if(selectedFigure == null){
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para copiar el formato");
+			}
+		});
+
 		turnRightButton.setOnMouseClicked(event -> {
 			if(selectedFigure != null) {
 				selectedFigure.turnRight();
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para girarla a la derecha");
 			}
 		});
 
@@ -316,6 +331,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				selectedFigure.turnHorizontal();
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para moverla horizontalmente");
 			}
 		});
 
@@ -323,6 +340,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				selectedFigure.turnVertical();
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para moverla verticalmente");
 			}
 		});
 
@@ -332,6 +351,8 @@ public class PaintPane extends BorderPane {
 				canvasState.add(newFigure);
 				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para duplicarla");
 			}
 		});
 
@@ -341,6 +362,8 @@ public class PaintPane extends BorderPane {
 				canvasState.add(newFigure);
 				layersMap.get(newFigure.getLayer()).add(newFigure);
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para dividirla");
 			}
 		});
 
@@ -364,6 +387,8 @@ public class PaintPane extends BorderPane {
 				canvasState.remove(selectedFigure);
 				canvasState.add(selectedFigure);
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para traerla al frente");
 			}
 		});
 
@@ -374,6 +399,8 @@ public class PaintPane extends BorderPane {
 				canvasState.remove(selectedFigure);
 				canvasState.addFirst(selectedFigure);
 				redrawCanvas();
+			} else {
+				setErrorAlert("Figura no seleccionada", "Debe seleccionar una figura para enviarla al fondo");
 			}
 		});
 
@@ -399,6 +426,8 @@ public class PaintPane extends BorderPane {
 				layerChoiceBox.getItems().remove(layerChoiceBox.getValue());
 				layerChoiceBox.setValue(layerChoiceBox.getItems().getFirst());
 				redrawCanvas();
+			} else {
+				setErrorAlert("No se pueden borrar las primeras tres capas", "Intente nuevamente");
 			}
 		});
 
@@ -445,6 +474,15 @@ public class PaintPane extends BorderPane {
 		box.setStyle("-fx-background-color: #999");
 		box.setPrefWidth(100);
 		gc.setLineWidth(1);
+	}
+
+	/* Mensaje de alerta */
+	private void setErrorAlert(String header, String content){
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait();
 	}
 
 }
