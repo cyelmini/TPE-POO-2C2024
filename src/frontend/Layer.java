@@ -1,5 +1,7 @@
 package frontend;
 
+import java.util.Objects;
+
 public class Layer {
     private final String name;
     private final int number;
@@ -25,5 +27,17 @@ public class Layer {
 
     public int getNumber() {
          return number;
+    }
+
+    @Override
+    public boolean equals(Object o){
+         return o instanceof Layer layer &&
+                 layer.name.equals(name) &&
+                 layer.number == number;
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(name, number);
     }
 }
